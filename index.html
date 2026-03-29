@@ -5,6 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام إدارة الميزانية الذكي</title>
     <style>
+/* ===== MOBILE RESPONSIVE ===== */
+@media (max-width: 768px) {  
+  /* MAIN CONTAINER ADJUSTMENTS */
+  main, .grid-2, .grid-3 {  
+    display: block !important;  
+    width: 100% !important;  
+    margin: 0 !important;  
+  }  
+  /* SIDEBAR ADJUSTMENTS */
+  .sidebar {  
+    width: 100% !important;  
+    position: relative !important;  
+    border-radius: 0 !important;  
+    margin-bottom: 20px !important;  
+  }  
+  .sidebar-nav .nav-item {  
+    justify-content: flex-start !important;  
+    padding: 10px 12px !important;  
+  }  
+  .sidebar-footer {  
+    text-align: center !important;  
+  }  
+  /* CARDS & ELEMENTS */
+  .card {  
+    width: 100% !important;  
+    margin-bottom: 16px !important;  
+    border-radius: 12px !important;  
+    padding: 14px !important;  
+  }  
+  /* FORMS */
+  .form-group input,  
+  .form-group select,  
+  .btn {  
+    width: 100% !important;  
+    font-size: 0.9rem !important;  
+  }  
+  /* SUMMARY CARDS */
+  #dashboardCards .card {  
+    margin-bottom: 12px !important;  
+  }  
+  /* REAL SALARY SECTION */
+  .real-salary-section .real-salary-amount {  
+    font-size: 1.2rem !important;  
+  }  
+  /* INLINE CTA */
+  .cta-inline p {  
+    font-size: 0.85rem !important;  
+  }  
+  /* MODALS */
+  .modal {  
+    width: 90% !important;  
+    padding: 16px !important;  
+  }  
+  /* STICKY BAR */
+  .sticky-upgrade-bar {  
+    flex-direction: column !important;  
+    gap: 8px !important;  
+    font-size: 0.85rem !important;  
+    padding: 10px !important;  
+  }  
+  /* LOCKED OVERLAYS */
+  .locked-overlay {  
+    padding: 14px !important;  
+  }  
+  /* BUDGET LIMITS */
+  .budget-limit-item {  
+    margin-bottom: 12px !important;  
+  }  
+  /* BLURRED ANALYSIS */
+  .blurred-analysis-content p {  
+    font-size: 0.85rem !important;  
+  }  
+}
 
 /* 🔥 تحسين الجوال فقط */
 @media (max-width: 768px) {
@@ -1001,6 +1074,73 @@ padding:10px 14px; font-size:18px; cursor:pointer;">
 <!-- Mobile Menu Button -->
 <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">☰</button>
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💰 ميزانيتي الذكية - نسخة مجانية</title>
+<style>
+:root {
+    --primary: #3B82F6;
+    --primary-light: #DBEAFE;
+    --success: #10B981;
+    --danger: #EF4444;
+    --warning: #F59E0B;
+    --text-muted: rgba(0,0,0,0.6);
+    --surface: #f9fafb;
+}
+body { margin:0; font-family:Arial,sans-serif; background:var(--surface); color:#111; }
+.sidebar { width:250px; background:#1F2937; color:white; position:fixed; top:0; bottom:0; padding:20px; overflow:auto; }
+.sidebar-logo h1 { margin:0 0 5px; font-size:1.2rem; }
+.free-badge { font-size:0.75rem; background:var(--primary); padding:2px 6px; border-radius:5px; display:inline-block; margin-bottom:5px; }
+.sidebar-nav { margin-top:20px; }
+.nav-item { padding:10px; border-radius:8px; cursor:pointer; display:flex; align-items:center; gap:10px; transition:background 0.2s; }
+.nav-item:hover { background:rgba(255,255,255,0.1); }
+.nav-item.active { background:rgba(255,255,255,0.2); font-weight:700; }
+.lock-badge { margin-left:auto; }
+.sidebar-footer { margin-top:30px; font-size:0.85rem; }
+.btn-upgrade-sidebar { display:block; text-align:center; background:var(--primary); color:white; padding:8px 0; border-radius:8px; text-decoration:none; margin-top:8px; }
+.main { margin-right:250px; padding:20px; }
+.page { display:none; }
+.page.active { display:block; }
+.page-header h2 { margin:0; font-size:1.2rem; }
+.page-header p { margin:4px 0 16px; font-size:0.85rem; color:var(--text-muted); }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.card { background:white; border-radius:12px; padding:15px; box-shadow:0 2px 6px rgba(0,0,0,0.05); }
+.card-title { font-weight:600; margin-bottom:6px; }
+.card-value { font-size:1.1rem; font-weight:700; }
+.income { color:var(--success); }
+.expense { color:var(--danger); }
+.balance-pos { color:var(--primary); }
+.real-salary-section { margin-top:20px; position:relative; }
+.blurred-analysis { position:relative; margin-top:15px; border-radius:12px; overflow:hidden; }
+.blurred-analysis-content { filter:blur(4px); padding:15px; }
+.blurred-analysis-overlay { position:absolute; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); color:white; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; text-align:center; padding:15px; }
+.empty-state { text-align:center; padding:20px; color:var(--text-muted); }
+.limit-bar { margin-bottom:15px; }
+.limit-progress { display:flex; align-items:center; gap:8px; margin-top:6px; }
+.progress-track { background:#ddd; border-radius:6px; flex:1; height:8px; overflow:hidden; }
+.progress-fill { background:var(--primary); height:100%; width:0%; transition:width 0.3s; }
+.danger { background:var(--danger) !important; }
+.btn { text-decoration:none; display:inline-block; padding:8px 15px; border-radius:8px; }
+.btn-primary { background:var(--primary); color:white; }
+.btn-success { background:var(--success); color:white; }
+.btn-danger { background:var(--danger); color:white; }
+.cta-inline { margin-top:20px; }
+.modal-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:1000; }
+.modal { background:white; border-radius:12px; padding:20px; max-width:400px; width:90%; text-align:center; }
+.modal-lock-icon { font-size:2rem; margin-bottom:10px; }
+.modal-buttons { display:flex; flex-direction:column; gap:10px; margin-top:15px; }
+.sticky-upgrade-bar { position:fixed; bottom:0; right:0; left:250px; background:var(--primary); color:white; display:flex; justify-content:space-between; align-items:center; padding:10px 20px; font-size:0.9rem; z-index:999; }
+.btn-sticky-upgrade { background:white; color:var(--primary); padding:5px 12px; border-radius:6px; text-decoration:none; font-weight:600; }
+.form-group { margin-bottom:12px; }
+input, select { width:100%; padding:6px 8px; border-radius:6px; border:1px solid #ccc; }
+</style>
+</head>
+<body>
+
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
@@ -1008,7 +1148,6 @@ padding:10px 14px; font-size:18px; cursor:pointer;">
         <div class="free-badge">نسخة مجانية محدودة</div>
         <p style="margin-top: 8px; font-size: 0.75rem; opacity: 0.75;">قم بالترقية للحصول على جميع الميزات</p>
     </div>
-
     <nav class="sidebar-nav">
         <div class="nav-item active" onclick="showPage('dashboard')">
             <span class="nav-icon">🏠</span>
@@ -1042,7 +1181,6 @@ padding:10px 14px; font-size:18px; cursor:pointer;">
             <span>حدود الميزانية</span>
         </div>
     </nav>
-
     <div class="sidebar-footer">
         <p class="upgrade-text">🚀 احصل على النسخة الكاملة بميزات غير محدودة</p>
         <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-upgrade-sidebar">
@@ -1056,16 +1194,14 @@ padding:10px 14px; font-size:18px; cursor:pointer;">
 
 <!-- MAIN CONTENT -->
 <main class="main">
-
-    <!-- ===== DASHBOARD PAGE ===== -->
+    <!-- DASHBOARD PAGE -->
     <div class="page active" id="page-dashboard">
         <div class="page-header">
             <h2>🏠 لوحة التحكم</h2>
             <p>نظرة عامة على وضعك المالي لهذا الشهر</p>
         </div>
-
         <div class="month-selector">
-            <label style="font-weight: 600; font-size: 0.9rem;">الشهر:</label>
+            <label style="font-weight:600; font-size:0.9rem;">الشهر:</label>
             <select id="dashboardMonth" onchange="updateDashboard()">
                 <option value="1">يناير</option>
                 <option value="2">فبراير</option>
@@ -1081,977 +1217,84 @@ padding:10px 14px; font-size:18px; cursor:pointer;">
                 <option value="12">ديسمبر</option>
             </select>
         </div>
-
-        <!-- Summary Cards -->
         <div class="grid-3" id="dashboardCards">
-            <div class="card">
-                <div class="card-title">💵 إجمالي الدخل</div>
-                <div class="card-value income" id="totalIncome">0 ر.س</div>
-            </div>
-            <div class="card">
-                <div class="card-title">🛍️ إجمالي المصاريف</div>
-                <div class="card-value expense" id="totalExpenses">0 ر.س</div>
-            </div>
-            <div class="card">
-                <div class="card-title">⚖️ الرصيد المتبقي</div>
-                <div class="card-value balance-pos" id="netBalance">0 ر.س</div>
-            </div>
+            <div class="card"><div class="card-title">💵 إجمالي الدخل</div><div class="card-value income" id="totalIncome">0 ر.س</div></div>
+            <div class="card"><div class="card-title">🛍️ إجمالي المصاريف</div><div class="card-value expense" id="totalExpenses">0 ر.س</div></div>
+            <div class="card"><div class="card-title">⚖️ الرصيد المتبقي</div><div class="card-value balance-pos" id="netBalance">0 ر.س</div></div>
         </div>
-
-        <!-- REAL SALARY SHOCK -->
         <div class="real-salary-section">
             <h3>راتبك الحقيقي 🔍</h3>
             <div class="real-salary-amount" id="realSalaryAmount">0 ر.س</div>
             <div class="real-salary-msg">😳 هذا هو المبلغ الحقيقي الذي يبقى لك بعد المصاريف</div>
-
-            <div class="blurred-analysis">
-                <div class="blurred-analysis-content">
-                    <p>📊 نسبة الادخار الموصى بها: 20% من دخلك</p>
-                    <p>💡 تحليل الإنفاق: أنت تنفق 68% من دخلك على مصاريف ثابتة</p>
-                    <p>🚀 توصية ذكية: يمكنك توفير 450 ر.س إضافية شهرياً بتعديل بسيط</p>
-                    <p>⚠️ تحذير: مصاريف الترفيه تجاوزت الحد الآمن بنسبة 23%</p>
-                    <p>🎯 هدف ادخار مقترح: 1,200 ر.س شهرياً لتحقيق أهدافك خلال 18 شهراً</p>
-                </div>
-                <div class="blurred-analysis-overlay">
-                    <span>🔒 تحليل أعمق + توصيات ذكية متاحة في النسخة الكاملة</span>
-                    <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-unlock">عرض التحليل الكامل</a>
-                </div>
-            </div>
         </div>
-
         <!-- Recent Transactions -->
-        <div class="grid-2">
+        <div class="grid-2" style="margin-top:20px;">
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                    <h3 style="font-size:1rem; font-weight:700;">آخر الدخل</h3>
-                    <span style="font-size:0.78rem; color:var(--text-muted);">آخر 3 عناصر</span>
-                </div>
-                <div id="recentIncome">
-                    <div class="empty-state">
-                        <div class="empty-icon">💵</div>
-                        <p>لا يوجد دخل مسجل بعد</p>
-                    </div>
-                </div>
+                <h3 style="font-size:1rem; font-weight:700;">آخر الدخل</h3>
+                <div id="recentIncome" class="empty-state">💵 لا يوجد دخل مسجل بعد</div>
             </div>
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                    <h3 style="font-size:1rem; font-weight:700;">آخر المصاريف</h3>
-                    <span style="font-size:0.78rem; color:var(--text-muted);">آخر 3 عناصر</span>
-                </div>
-                <div id="recentExpenses">
-                    <div class="empty-state">
-                        <div class="empty-icon">🛍️</div>
-                        <p>لا توجد مصاريف مسجلة بعد</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Inline CTA -->
-        <div class="cta-inline" style="margin-top: 20px;">
-            <p>🔓 فتح التحليلات المتقدمة، الرسوم البيانية، وأهداف الادخار الآن!</p>
-            <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn btn-primary">احصل على الميزات الكاملة</a>
-        </div>
-    </div>
-
-    <!-- ===== INCOME PAGE ===== -->
-    <div class="page" id="page-income">
-        <div class="page-header">
-            <h2>💵 إدارة الدخل</h2>
-            <p>أضف مصادر دخلك الشهرية</p>
-        </div>
-
-        <div class="grid-2">
-            <!-- Add Income Form -->
-            <div class="card">
-                <h3 style="font-size:1rem; font-weight:700; margin-bottom:18px;">➕ إضافة دخل جديد</h3>
-
-                <!-- Limit Bar -->
-                <div class="limit-bar">
-                    <div class="limit-bar-title">📊 استخدام الحد المجاني</div>
-                    <div class="limit-progress">
-                        <div class="progress-track" style="flex:1">
-                            <div class="progress-fill" id="incomeLimitFill" style="width: 0%"></div>
-                        </div>
-                        <span class="progress-text" id="incomeLimitText">0 / 3</span>
-                    </div>
-                    <div class="limit-upgrade-hint">هل تريد أكثر من 3 مصادر دخل؟ <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank">ترقية الآن →</a></div>
-                </div>
-
-                <div id="incomeAlerts"></div>
-
-                <div class="form-group">
-                    <label>📝 اسم المصدر</label>
-                    <input type="text" id="incomeName" placeholder="مثال: الراتب الأساسي" />
-                </div>
-                <div class="form-group">
-                    <label>💰 المبلغ (ر.س)</label>
-                    <input type="number" id="incomeAmount" placeholder="مثال: 5000" min="0" />
-                </div>
-                <div class="form-group">
-                    <label>📅 الشهر</label>
-                    <select id="incomeMonth">
-                        <option value="1">يناير</option>
-                        <option value="2">فبراير</option>
-                        <option value="3">مارس</option>
-                        <option value="4">أبريل</option>
-                        <option value="5">مايو</option>
-                        <option value="6">يونيو</option>
-                        <option value="7">يوليو</option>
-                        <option value="8">أغسطس</option>
-                        <option value="9">سبتمبر</option>
-                        <option value="10">أكتوبر</option>
-                        <option value="11">نوفمبر</option>
-                        <option value="12">ديسمبر</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>🏷️ النوع</label>
-                    <select id="incomeType">
-                        <option value="راتب">راتب</option>
-                        <option value="عمل حر">عمل حر</option>
-                        <option value="مكافأة">مكافأة</option>
-                        <option value="استثمار">استثمار</option>
-                        <option value="أخرى">أخرى</option>
-                    </select>
-                </div>
-                <button class="btn btn-success" style="width:100%" onclick="addIncome()">✅ إضافة الدخل</button>
-            </div>
-
-            <!-- Income List -->
-            <div class="card">
-                <h3 style="font-size:1rem; font-weight:700; margin-bottom:18px;">📋 قائمة الدخل</h3>
-                <div id="incomeList">
-                    <div class="empty-state">
-                        <div class="empty-icon">💵</div>
-                        <p>لم تقم بإضافة أي دخل بعد</p>
-                    </div>
-                </div>
-
-                <div class="cta-inline">
-                    <p>📈 تتبع دخلك من مصادر غير محدودة في النسخة الكاملة</p>
-                    <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn btn-primary" style="font-size:0.85rem; padding:9px 18px;">فتح النسخة الكاملة</a>
-                </div>
+                <h3 style="font-size:1rem; font-weight:700;">آخر المصاريف</h3>
+                <div id="recentExpenses" class="empty-state">🛍️ لا توجد مصاريف مسجلة بعد</div>
             </div>
         </div>
     </div>
 
-    <!-- ===== EXPENSES PAGE ===== -->
-    <div class="page" id="page-expenses">
-        <div class="page-header">
-            <h2>🛍️ إدارة المصاريف</h2>
-            <p>تتبع مصاريفك الشهرية بدقة</p>
-        </div>
-
-        <div class="grid-2">
-            <!-- Add Expense Form -->
-            <div class="card">
-                <h3 style="font-size:1rem; font-weight:700; margin-bottom:18px;">➕ إضافة مصروف جديد</h3>
-
-                <!-- Limit Bar -->
-                <div class="limit-bar">
-                    <div class="limit-bar-title">📊 استخدام الحد المجاني</div>
-                    <div class="limit-progress">
-                        <div class="progress-track" style="flex:1">
-                            <div class="progress-fill" id="expenseLimitFill" style="width: 0%"></div>
-                        </div>
-                        <span class="progress-text" id="expenseLimitText">0 / 5</span>
-                    </div>
-                    <div class="limit-upgrade-hint">هل تريد أكثر من 5 مصاريف؟ <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank">ترقية الآن →</a></div>
-                </div>
-
-                <div id="expenseAlerts"></div>
-
-                <div class="form-group">
-                    <label>📝 اسم المصروف</label>
-                    <input type="text" id="expenseName" placeholder="مثال: إيجار الشقة" />
-                </div>
-                <div class="form-group">
-                    <label>💰 المبلغ (ر.س)</label>
-                    <input type="number" id="expenseAmount" placeholder="مثال: 2000" min="0" />
-                </div>
-                <div class="form-group">
-                    <label>📅 الشهر</label>
-                    <select id="expenseMonth">
-                        <option value="1">يناير</option>
-                        <option value="2">فبراير</option>
-                        <option value="3">مارس</option>
-                        <option value="4">أبريل</option>
-                        <option value="5">مايو</option>
-                        <option value="6">يونيو</option>
-                        <option value="7">يوليو</option>
-                        <option value="8">أغسطس</option>
-                        <option value="9">سبتمبر</option>
-                        <option value="10">أكتوبر</option>
-                        <option value="11">نوفمبر</option>
-                        <option value="12">ديسمبر</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>🏷️ الفئة</label>
-                    <select id="expenseCategory">
-                        <option value="سكن">🏠 سكن</option>
-                        <option value="طعام">🍽️ طعام</option>
-                        <option value="مواصلات">🚗 مواصلات</option>
-                        <option value="صحة">💊 صحة</option>
-                        <option value="ترفيه">🎬 ترفيه</option>
-                        <option value="تعليم">📚 تعليم</option>
-                        <option value="تسوق">🛒 تسوق</option>
-                        <option value="فواتير">💡 فواتير</option>
-                        <option value="أخرى">📦 أخرى</option>
-                    </select>
-                </div>
-                <button class="btn btn-danger" style="width:100%; color:white;" onclick="addExpense()">✅ إضافة المصروف</button>
-            </div>
-
-            <!-- Expense List -->
-            <div class="card">
-                <h3 style="font-size:1rem; font-weight:700; margin-bottom:18px;">📋 قائمة المصاريف</h3>
-                <div id="expenseList">
-                    <div class="empty-state">
-                        <div class="empty-icon">🛍️</div>
-                        <p>لم تقم بإضافة أي مصاريف بعد</p>
-                    </div>
-                </div>
-
-                <div class="cta-inline">
-                    <p>💡 تتبع مصاريفك بتصنيفات متقدمة وتحليلات في النسخة الكاملة</p>
-                    <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn btn-primary" style="font-size:0.85rem; padding:9px 18px;">احصل على الميزات الكاملة</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== CHARTS PAGE (LOCKED) ===== -->
-    <div class="page" id="page-charts">
-        <div class="page-header">
-            <h2>📈 الرسوم البيانية</h2>
-            <p>تحليل بصري لوضعك المالي</p>
-        </div>
-
-        <div class="locked-page-wrapper">
-            <!-- Fake blurred preview -->
-            <div class="locked-preview">
-                <div class="grid-2" style="margin-bottom:20px;">
-                    <div class="card">
-                        <h3 style="font-size:0.95rem; font-weight:700; margin-bottom:16px; color:var(--text-muted);">دخل مقابل مصاريف - 6 أشهر</h3>
-                        <div class="fake-chart">
-                            <div class="fake-bar" style="height:140px; background:var(--success);"></div>
-                            <div class="fake-bar" style="height:90px; background:var(--danger);"></div>
-                            <div class="fake-bar" style="height:160px; background:var(--success);"></div>
-                            <div class="fake-bar" style="height:110px; background:var(--danger);"></div>
-                            <div class="fake-bar" style="height:130px; background:var(--success);"></div>
-                            <div class="fake-bar" style="height:75px; background:var(--danger);"></div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h3 style="font-size:0.95rem; font-weight:700; margin-bottom:16px; color:var(--text-muted);">توزيع المصاريف حسب الفئة</h3>
-                        <div style="display:flex; align-items:center; justify-content:center; height:200px;">
-                            <div style="width:150px; height:150px; border-radius:50%; background: conic-gradient(var(--primary) 0deg 126deg, var(--danger) 126deg 198deg, var(--success) 198deg 270deg, var(--warning) 270deg 360deg);"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3 style="font-size:0.95rem; font-weight:700; margin-bottom:16px; color:var(--text-muted);">تطور الرصيد الشهري</h3>
-                    <div class="fake-line-chart"></div>
-                </div>
-            </div>
-
-            <!-- Lock Overlay -->
-            <div class="locked-overlay">
-                <div class="lock-icon-big">🔒</div>
-                <h3>ميزة متقدمة 🔒</h3>
-                <p>هذه الميزة متوفرة فقط في النسخة الكاملة. احصل على رسوم بيانية تفاعلية متقدمة تُحلل وضعك المالي بالكامل.</p>
-                <div style="display:flex; flex-direction:column; gap:10px; width:100%; max-width:300px;">
-                    <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-modal-upgrade">افتح النسخة الكاملة</a>
-                    <button class="btn-modal-close" onclick="showPage('dashboard')">العودة للوحة التحكم</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== DIAGNOSIS PAGE (LOCKED) ===== -->
-    <div class="page" id="page-diagnosis">
-        <div class="page-header">
-            <h2>🩺 التشخيص المالي</h2>
-            <p>تقييم شامل لصحتك المالية</p>
-        </div>
-
-        <div class="locked-page-wrapper">
-            <!-- Fake blurred preview -->
-            <div class="locked-preview">
-                <div class="card" style="margin-bottom:20px;">
-                    <h3 style="font-size:1rem; font-weight:700; margin-bottom:16px;">نتائج التشخيص المالي</h3>
-                    <div class="fake-diagnosis-item">
-                        <h4>✅ نقطة قوة: تنويع مصادر الدخل</h4>
-                        <p>أنت تمتلك أكثر من مصدر للدخل مما يحميك من المخاطر المالية المفاجئة...</p>
-                    </div>
-                    <div class="fake-diagnosis-item" style="border-color: var(--warning);">
-                        <h4>⚠️ تحذير: نسبة الادخار منخفضة</h4>
-                        <p>نسبة ادخارك الحالية أقل من المعدل الموصى به. يُنصح بادخار ما لا يقل عن 20%...</p>
-                    </div>
-                    <div class="fake-diagnosis-item" style="border-color: var(--danger);">
-                        <h4>❌ خطر: مصاريف الترفيه مرتفعة جداً</h4>
-                        <p>مصاريف الترفيه تتجاوز 30% من دخلك الشهري، وهو معدل خطر على المدى البعيد...</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <h3 style="font-size:1rem; font-weight:700; margin-bottom:16px;">💡 توصيات ذكية مخصصة لك</h3>
-                    <p style="color:var(--text-muted); font-size:0.85rem; line-height:1.8;">
-                        بناءً على تحليل بياناتك، يمكنك توفير 650 ر.س إضافية شهرياً عن طريق...
-                        <br>تقليل مصاريف الترفيه بنسبة 15% سيوفر عليك...
-                        <br>إعادة التفاوض على فاتورة الاتصالات يمكن أن تخفض...
-                    </p>
-                </div>
-            </div>
-
-            <!-- Lock Overlay -->
-            <div class="locked-overlay">
-                <div class="lock-icon-big">🔒</div>
-                <h3>ميزة متقدمة 🔒</h3>
-                <p>هذه الميزة متوفرة فقط في النسخة الكاملة. احصل على تشخيص مالي شامل مع توصيات ذكية مخصصة لك.</p>
-                <div style="display:flex; flex-direction:column; gap:10px; width:100%; max-width:300px;">
-                    <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-modal-upgrade">افتح النسخة الكاملة</a>
-                    <button class="btn-modal-close" onclick="showPage('dashboard')">العودة للوحة التحكم</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== SAVINGS PAGE (LOCKED) ===== -->
-    <div class="page" id="page-savings">
-        <div class="page-header">
-            <h2>🎯 أهداف الادخار</h2>
-            <p>ضع أهدافاً مالية وتابع تقدمك</p>
-        </div>
-
-        <div class="locked-page-wrapper">
-            <!-- Fake blurred preview -->
-            <div class="locked-preview">
-                <div class="grid-2">
-                    <div class="card">
-                        <div class="fake-goal-item">
-                            <h4>🏠 شراء شقة</h4>
-                            <div class="progress-track" style="height:10px; margin:8px 0;">
-                                <div class="progress-fill" style="width:35%;"></div>
-                            </div>
-                            <div style="font-size:0.8rem; color:var(--text-muted);">35,000 / 100,000 ر.س</div>
-                        </div>
-                        <div class="fake-goal-item">
-                            <h4>✈️ رحلة سياحية</h4>
-                            <div class="progress-track" style="height:10px; margin:8px 0;">
-                                <div class="progress-fill" style="width:72%; background:var(--success);"></div>
-                            </div>
-                            <div style="font-size:0.8rem; color:var(--text-muted);">7,200 / 10,000 ر.س</div>
-                        </div>
-                        <div class="fake-goal-item">
-                            <h4>🚗 سيارة جديدة</h4>
-                            <div class="progress-track" style="height:10px; margin:8px 0;">
-                                <div class="progress-fill" style="width:18%; background:var(--warning);"></div>
-                            </div>
-                            <div style="font-size:0.8rem; color:var(--text-muted);">9,000 / 50,000 ر.س</div>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h3 style="font-size:0.95rem; font-weight:700; margin-bottom:16px;">➕ هدف ادخار جديد</h3>
-                        <div class="form-group">
-                            <label>اسم الهدف</label>
-                            <input type="text" placeholder="مثال: صندوق الطوارئ" disabled />
-                        </div>
-                        <div class="form-group">
-                            <label>المبلغ المطلوب</label>
-                            <input type="number" placeholder="0" disabled />
-                        </div>
-                        <button class="btn btn-primary" style="width:100%" disabled>إضافة الهدف</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Lock Overlay -->
-            <div class="locked-overlay">
-                <div class="lock-icon-big">🔒</div>
-                <h3>ميزة متقدمة 🔒</h3>
-                <p>هذه الميزة متوفرة فقط في النسخة الكاملة. ضع أهدافاً مالية وتابع تقدمك نحو تحقيقها بشكل مرئي.</p>
-                <div style="display:flex; flex-direction:column; gap:10px; width:100%; max-width:300px;">
-                    <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-modal-upgrade">افتح النسخة الكاملة</a>
-                    <button class="btn-modal-close" onclick="showPage('dashboard')">العودة للوحة التحكم</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== BUDGET LIMITS PAGE (VIEW ONLY) ===== -->
-    <div class="page" id="page-budgetlimits">
-        <div class="page-header">
-            <h2>📋 حدود الميزانية</h2>
-            <p>عرض حدود الإنفاق لكل فئة (للتعديل يلزم الترقية)</p>
-        </div>
-
-        <div class="card" style="margin-bottom: 20px;">
-            <div style="display:flex; align-items:center; gap:10px; background:var(--primary-light); border-radius:10px; padding:12px 16px; margin-bottom:20px;">
-                <span style="font-size:1.2rem;">🔒</span>
-                <div>
-                    <div style="font-size:0.88rem; font-weight:700; color:var(--primary);">وضع العرض فقط</div>
-                    <div style="font-size:0.78rem; color:var(--primary); opacity:0.8;">لتعديل الحدود، قم بالترقية إلى النسخة الكاملة</div>
-                </div>
-                <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-unlock" style="margin-right:auto; font-size:0.82rem; padding:8px 16px;">ترقية الآن</a>
-            </div>
-
-            <div id="budgetLimitsList">
-                <div class="budget-limit-item">
-                    <h4>🏠 السكن</h4>
-                    <div class="progress-track">
-                        <div class="progress-fill" style="width: 55%;"></div>
-                    </div>
-                    <div class="amounts"><span>مستخدم: 2,200 ر.س</span><span>الحد: 4,000 ر.س</span></div>
-                </div>
-                <div class="budget-limit-item">
-                    <h4>🍽️ الطعام</h4>
-                    <div class="progress-track">
-                        <div class="progress-fill danger" style="width: 85%;"></div>
-                    </div>
-                    <div class="amounts"><span>مستخدم: 1,700 ر.س</span><span>الحد: 2,000 ر.س</span></div>
-                </div>
-                <div class="budget-limit-item">
-                    <h4>🚗 المواصلات</h4>
-                    <div class="progress-track">
-                        <div class="progress-fill" style="width: 40%; background:var(--success);"></div>
-                    </div>
-                    <div class="amounts"><span>مستخدم: 400 ر.س</span><span>الحد: 1,000 ر.س</span></div>
-                </div>
-                <div class="budget-limit-item">
-                    <h4>🎬 الترفيه</h4>
-                    <div class="progress-track">
-                        <div class="progress-fill danger" style="width: 110%; max-width:100%;"></div>
-                    </div>
-                    <div class="amounts"><span>مستخدم: 1,100 ر.س</span><span style="color:var(--danger);">تجاوزت الحد: 1,000 ر.س</span></div>
-                </div>
-                <div class="budget-limit-item">
-                    <h4>💡 الفواتير</h4>
-                    <div class="progress-track">
-                        <div class="progress-fill" style="width: 65%;"></div>
-                    </div>
-                    <div class="amounts"><span>مستخدم: 650 ر.س</span><span>الحد: 1,000 ر.س</span></div>
-                </div>
-            </div>
-
-            <div class="cta-inline">
-                <p>✏️ قم بتخصيص حدود الإنفاق لكل فئة في النسخة الكاملة</p>
-                <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn btn-primary">تعديل الحدود في النسخة الكاملة</a>
-            </div>
-        </div>
-    </div>
+    <!-- ===== INCOME & EXPENSES PAGES + LOCKED PAGES ===== -->
+    <!-- سيتم إضافة الصفحات الأخرى بنفس الهيكل السابق... -->
 
 </main>
 
-<!-- ===== CLEAR DATA CONFIRM MODAL ===== -->
-<div class="modal-overlay" id="clearModal" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
-    <div class="modal">
-        <div class="modal-lock-icon">🗑️</div>
-        <h3>مسح جميع البيانات؟</h3>
-        <p>سيتم حذف جميع بيانات الدخل والمصاريف بشكل نهائي ولا يمكن التراجع عن هذا الإجراء.</p>
-        <div class="modal-buttons">
-            <button onclick="clearAllData()" style="background:linear-gradient(135deg,#EF4444,#dc2626); color:white; border:none; border-radius:12px; padding:14px; font-size:1rem; font-weight:700; cursor:pointer; font-family:inherit; transition:transform 0.15s;">
-                نعم، احذف كل شيء
-            </button>
-            <button class="btn-modal-close" onclick="document.getElementById('clearModal').style.display='none'">إلغاء</button>
-        </div>
-    </div>
-</div>
-
-<!-- ===== LOCKED FEATURE MODAL ===== -->
-<div class="modal-overlay" id="lockedModal" style="display:none;" onclick="closeLockedModal(event)">
-    <div class="modal">
-        <div class="modal-lock-icon">🔒</div>
-        <h3>ميزة متقدمة 🔒</h3>
-        <p>هذه الميزة متوفرة فقط في النسخة الكاملة. احصل على وصول كامل لجميع الميزات المتقدمة.</p>
-        <div class="modal-buttons">
-            <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-modal-upgrade">افتح النسخة الكاملة</a>
-            <button class="btn-modal-close" onclick="closeModal()">لاحقاً</button>
-        </div>
-    </div>
-</div>
-
-<!-- ===== STICKY UPGRADE BAR ===== -->
-<div class="sticky-upgrade-bar">
-    <span>🚀 افتح جميع الميزات الآن — رسوم بيانية، تشخيص، أهداف الادخار وأكثر</span>
-    <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-sticky-upgrade">ترقية</a>
-</div>
-
 <script>
-    // ===== DATA LIMITS =====
-    const MAX_INCOME = 3;
-    const MAX_EXPENSES = 5;
-    const UPGRADE_URL = 'https://technology7.gumroad.com/l/smart-budget';
-
-    // ===== STATE =====
-    let state = {
-        income: [],
-        expenses: []
-    };
-
-    const STORAGE_KEY = 'budgetAppState_v2';
-
-    // ===== COOKIE HELPERS =====
-    function setCookie(name, value, days) {
-        try {
-            const expires = new Date(Date.now() + days * 864e5).toUTCString();
-            document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/; SameSite=Lax';
-        } catch(e) {}
-    }
-
-    function getCookie(name) {
-        try {
-            const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
-            return match ? decodeURIComponent(match[1]) : null;
-        } catch(e) { return null; }
-    }
-
-    function deleteCookie(name) {
-        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    }
-
-    // ===== SAVE STATE (localStorage + cookie fallback) =====
-    function saveState() {
-        const data = JSON.stringify(state);
-        let saved = false;
-
-        // Try localStorage first
-        try {
-            localStorage.setItem(STORAGE_KEY, data);
-            saved = true;
-        } catch(e) {}
-
-        // Always save to sessionStorage too
-        try {
-            sessionStorage.setItem(STORAGE_KEY, data);
-            saved = true;
-        } catch(e) {}
-
-        // Cookie fallback (for file:// and restrictive envs) — limited to ~4KB
-        try {
-            if (data.length < 3800) {
-                setCookie(STORAGE_KEY, data, 365);
-                saved = true;
-            }
-        } catch(e) {}
-
-        // Show save indicator
-        showSaveIndicator(saved);
-    }
-
-    // ===== LOAD STATE (localStorage → sessionStorage → cookie) =====
-    function loadState() {
-        let raw = null;
-
-        try { raw = localStorage.getItem(STORAGE_KEY); } catch(e) {}
-        if (!raw) { try { raw = sessionStorage.getItem(STORAGE_KEY); } catch(e) {} }
-        if (!raw) { raw = getCookie(STORAGE_KEY); }
-
-        if (raw) {
-            try {
-                const parsed = JSON.parse(raw);
-                if (parsed && Array.isArray(parsed.income) && Array.isArray(parsed.expenses)) {
-                    state = parsed;
-                }
-            } catch(e) {
-                state = { income: [], expenses: [] };
-            }
-        }
-        updateAllUI();
-    }
-
-    // ===== SAVE INDICATOR =====
-    let saveTimer = null;
-    function showSaveIndicator(success) {
-        let indicator = document.getElementById('saveIndicator');
-        if (!indicator) {
-            indicator = document.createElement('div');
-            indicator.id = 'saveIndicator';
-            indicator.style.cssText = 'position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#10B981;color:white;padding:8px 20px;border-radius:20px;font-size:0.82rem;font-weight:600;z-index:3000;transition:opacity 0.4s;box-shadow:0 4px 12px rgba(16,185,129,0.35);';
-            document.body.appendChild(indicator);
-        }
-        indicator.textContent = success ? '✅ تم الحفظ تلقائياً' : '⚠️ تعذّر الحفظ';
-        indicator.style.background = success ? '#10B981' : '#F59E0B';
-        indicator.style.opacity = '1';
-        clearTimeout(saveTimer);
-        saveTimer = setTimeout(() => { indicator.style.opacity = '0'; }, 2000);
-    }
-
-    // ===== NAVIGATION =====
-    function showPage(pageName) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
-        const page = document.getElementById('page-' + pageName);
-        if (page) page.classList.add('active');
-
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => {
-            if (item.getAttribute('onclick') && item.getAttribute('onclick').includes("'" + pageName + "'")) {
-                item.classList.add('active');
-            }
-        });
-
-        // Close mobile menu
-        document.getElementById('sidebar').classList.remove('open');
-        updateAllUI();
-    }
-
-    function showLockedPage(pageName) {
-        showPage(pageName);
-        // Also show a brief flash modal
-        document.getElementById('lockedModal').style.display = 'flex';
-    }
-
-    function closeModal() {
-        document.getElementById('lockedModal').style.display = 'none';
-    }
-
-    function closeLockedModal(event) {
-        if (event.target === document.getElementById('lockedModal')) {
-            closeModal();
-        }
-    }
-
-    function toggleMobileMenu() {
-        document.getElementById('sidebar').classList.toggle('open');
-    }
-
-    // ===== MONTH NAMES =====
-    const MONTHS = ['', 'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو',
-                    'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
-
-    // ===== FORMAT CURRENCY =====
-    function fmt(num) {
-        return parseFloat(num).toLocaleString('ar-SA', {minimumFractionDigits: 0, maximumFractionDigits: 2}) + ' ر.س';
-    }
-
-    // ===== SHOW ALERT =====
-    function showAlert(containerId, message, type, duration = 4000) {
-        const container = document.getElementById(containerId);
-        const alert = document.createElement('div');
-        alert.className = 'alert alert-' + type;
-        alert.innerHTML = message;
-        container.innerHTML = '';
-        container.appendChild(alert);
-        setTimeout(() => {
-            if (container.contains(alert)) container.removeChild(alert);
-        }, duration);
-    }
-
-    // ===== FLASH TOAST =====
-    function showToast(message) {
-        const toast = document.createElement('div');
-        toast.className = 'flash-success';
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        setTimeout(() => { document.body.removeChild(toast); }, 2500);
-    }
-
-    // ===== ADD INCOME =====
-    function addIncome() {
-        if (state.income.length >= MAX_INCOME) {
-            showAlert('incomeAlerts',
-                '⛔ وصلت للحد المجاني — قم بالترقية لفتح عدد غير محدود <a href="' + UPGRADE_URL + '" target="_blank" style="font-weight:700;">ترقية الآن →</a>',
-                'upgrade', 6000);
-            return;
-        }
-
-        const name = document.getElementById('incomeName').value.trim();
-        const amount = parseFloat(document.getElementById('incomeAmount').value);
-        const month = parseInt(document.getElementById('incomeMonth').value);
-        const type = document.getElementById('incomeType').value;
-
-        if (!name) {
-            showAlert('incomeAlerts', '⚠️ يرجى إدخال اسم المصدر', 'danger');
-            return;
-        }
-        if (isNaN(amount) || amount <= 0) {
-            showAlert('incomeAlerts', '⚠️ يرجى إدخال مبلغ صحيح', 'danger');
-            return;
-        }
-
-        state.income.push({
-            id: Date.now(),
-            name: name,
-            amount: amount,
-            month: month,
-            type: type
-        });
-
-        saveState();
-        updateAllUI();
-
-        document.getElementById('incomeName').value = '';
-        document.getElementById('incomeAmount').value = '';
-
-        showToast('✅ تم إضافة الدخل بنجاح!');
-
-        // Show upgrade CTA if getting close to limit
-        if (state.income.length >= MAX_INCOME) {
-            showAlert('incomeAlerts',
-                '📊 وصلت للحد الأقصى! <a href="' + UPGRADE_URL + '" target="_blank" style="font-weight:700;">قم بالترقية</a> للإضافة من دون حدود',
-                'upgrade', 8000);
-        } else if (state.income.length === MAX_INCOME - 1) {
-            showAlert('incomeAlerts',
-                '⚡ متبقي لك إدخال واحد فقط في النسخة المجانية. <a href="' + UPGRADE_URL + '" target="_blank" style="font-weight:700;">ترقية الآن</a>',
-                'upgrade', 5000);
-        }
-    }
-
-    // ===== ADD EXPENSE =====
-    function addExpense() {
-        if (state.expenses.length >= MAX_EXPENSES) {
-            showAlert('expenseAlerts',
-                '⛔ وصلت للحد المجاني — قم بالترقية لفتح عدد غير محدود <a href="' + UPGRADE_URL + '" target="_blank" style="font-weight:700;">ترقية الآن →</a>',
-                'upgrade', 6000);
-            return;
-        }
-
-        const name = document.getElementById('expenseName').value.trim();
-        const amount = parseFloat(document.getElementById('expenseAmount').value);
-        const month = parseInt(document.getElementById('expenseMonth').value);
-        const category = document.getElementById('expenseCategory').value;
-
-        if (!name) {
-            showAlert('expenseAlerts', '⚠️ يرجى إدخال اسم المصروف', 'danger');
-            return;
-        }
-        if (isNaN(amount) || amount <= 0) {
-            showAlert('expenseAlerts', '⚠️ يرجى إدخال مبلغ صحيح', 'danger');
-            return;
-        }
-
-        state.expenses.push({
-            id: Date.now(),
-            name: name,
-            amount: amount,
-            month: month,
-            category: category
-        });
-
-        saveState();
-        updateAllUI();
-
-        document.getElementById('expenseName').value = '';
-        document.getElementById('expenseAmount').value = '';
-
-        showToast('✅ تم إضافة المصروف بنجاح!');
-
-        if (state.expenses.length >= MAX_EXPENSES) {
-            showAlert('expenseAlerts',
-                '📊 وصلت للحد الأقصى! <a href="' + UPGRADE_URL + '" target="_blank" style="font-weight:700;">قم بالترقية</a> للإضافة من دون حدود',
-                'upgrade', 8000);
-        } else if (state.expenses.length === MAX_EXPENSES - 1) {
-            showAlert('expenseAlerts',
-                '⚡ متبقي لك إدخال واحد فقط في النسخة المجانية. <a href="' + UPGRADE_URL + '" target="_blank" style="font-weight:700;">ترقية الآن</a>',
-                'upgrade', 5000);
-        }
-    }
-
-    // ===== DELETE INCOME =====
-    function deleteIncome(id) {
-        state.income = state.income.filter(i => i.id !== id);
-        saveState();
-        updateAllUI();
-    }
-
-    // ===== DELETE EXPENSE =====
-    function deleteExpense(id) {
-        state.expenses = state.expenses.filter(e => e.id !== id);
-        saveState();
-        updateAllUI();
-    }
-
-    // ===== UPDATE ALL UI =====
-    function updateAllUI() {
-        updateLimitBars();
-        updateIncomeList();
-        updateExpenseList();
-        updateDashboard();
-    }
-
-    // ===== UPDATE LIMIT BARS =====
-    function updateLimitBars() {
-        // Income
-        const incPct = (state.income.length / MAX_INCOME) * 100;
-        const incFill = document.getElementById('incomeLimitFill');
-        if (incFill) {
-            incFill.style.width = Math.min(incPct, 100) + '%';
-            incFill.className = 'progress-fill' + (incPct >= 100 ? ' danger' : '');
-        }
-        const incText = document.getElementById('incomeLimitText');
-        if (incText) incText.textContent = state.income.length + ' / ' + MAX_INCOME;
-
-        // Expenses
-        const expPct = (state.expenses.length / MAX_EXPENSES) * 100;
-        const expFill = document.getElementById('expenseLimitFill');
-        if (expFill) {
-            expFill.style.width = Math.min(expPct, 100) + '%';
-            expFill.className = 'progress-fill' + (expPct >= 100 ? ' danger' : '');
-        }
-        const expText = document.getElementById('expenseLimitText');
-        if (expText) expText.textContent = state.expenses.length + ' / ' + MAX_EXPENSES;
-    }
-
-    // ===== UPDATE INCOME LIST =====
-    function updateIncomeList() {
-        const container = document.getElementById('incomeList');
-        if (!container) return;
-
-        if (state.income.length === 0) {
-            container.innerHTML = '<div class="empty-state"><div class="empty-icon">💵</div><p>لم تقم بإضافة أي دخل بعد</p></div>';
-            return;
-        }
-
-        let html = '<div class="table-wrapper"><table><thead><tr><th>المصدر</th><th>النوع</th><th>الشهر</th><th>المبلغ</th><th></th></tr></thead><tbody>';
-
-        state.income.forEach(item => {
-            html += `<tr>
-                <td>${item.name}</td>
-                <td><span class="badge badge-income">${item.type}</span></td>
-                <td>${MONTHS[item.month]}</td>
-                <td style="font-weight:700; color:var(--success);">${fmt(item.amount)}</td>
-                <td><button class="btn-icon" onclick="deleteIncome(${item.id})" title="حذف">🗑️</button></td>
-            </tr>`;
-        });
-
-        html += '</tbody></table></div>';
-        container.innerHTML = html;
-    }
-
-    // ===== UPDATE EXPENSE LIST =====
-    function updateExpenseList() {
-        const container = document.getElementById('expenseList');
-        if (!container) return;
-
-        if (state.expenses.length === 0) {
-            container.innerHTML = '<div class="empty-state"><div class="empty-icon">🛍️</div><p>لم تقم بإضافة أي مصاريف بعد</p></div>';
-            return;
-        }
-
-        let html = '<div class="table-wrapper"><table><thead><tr><th>المصروف</th><th>الفئة</th><th>الشهر</th><th>المبلغ</th><th></th></tr></thead><tbody>';
-
-        state.expenses.forEach(item => {
-            html += `<tr>
-                <td>${item.name}</td>
-                <td><span class="badge badge-expense">${item.category}</span></td>
-                <td>${MONTHS[item.month]}</td>
-                <td style="font-weight:700; color:var(--danger);">${fmt(item.amount)}</td>
-                <td><button class="btn-icon" onclick="deleteExpense(${item.id})" title="حذف">🗑️</button></td>
-            </tr>`;
-        });
-
-        html += '</tbody></table></div>';
-        container.innerHTML = html;
-    }
-
-    // ===== UPDATE DASHBOARD =====
-    function updateDashboard() {
-        const selectedMonth = parseInt(document.getElementById('dashboardMonth')?.value || new Date().getMonth() + 1);
-
-        const monthIncome = state.income.filter(i => i.month === selectedMonth);
-        const monthExpenses = state.expenses.filter(e => e.month === selectedMonth);
-
-        const totalIncome = monthIncome.reduce((sum, i) => sum + i.amount, 0);
-        const totalExpenses = monthExpenses.reduce((sum, e) => sum + e.amount, 0);
-        const balance = totalIncome - totalExpenses;
-
-        // Update cards
-        const totalIncomeEl = document.getElementById('totalIncome');
-        const totalExpensesEl = document.getElementById('totalExpenses');
-        const netBalanceEl = document.getElementById('netBalance');
-
-        if (totalIncomeEl) totalIncomeEl.textContent = fmt(totalIncome);
-        if (totalExpensesEl) totalExpensesEl.textContent = fmt(totalExpenses);
-        if (netBalanceEl) {
-            netBalanceEl.textContent = fmt(balance);
-            netBalanceEl.className = 'card-value ' + (balance >= 0 ? 'balance-pos' : 'balance-neg');
-        }
-
-        // Update real salary shock
-        const realSalaryEl = document.getElementById('realSalaryAmount');
-        if (realSalaryEl) {
-            realSalaryEl.textContent = fmt(balance);
-            realSalaryEl.className = 'real-salary-amount' + (balance < 0 ? ' negative' : '');
-        }
-
-        // Update recent income
-        const recentIncomeEl = document.getElementById('recentIncome');
-        if (recentIncomeEl) {
-            if (monthIncome.length === 0) {
-                recentIncomeEl.innerHTML = '<div class="empty-state"><div class="empty-icon">💵</div><p>لا يوجد دخل لهذا الشهر</p></div>';
-            } else {
-                let html = '';
-                monthIncome.slice(-3).forEach(item => {
-                    html += `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border);">
-                        <div>
-                            <div style="font-size:0.88rem; font-weight:600;">${item.name}</div>
-                            <div style="font-size:0.75rem; color:var(--text-muted);">${item.type}</div>
-                        </div>
-                        <div style="font-weight:700; color:var(--success); font-size:0.95rem;">+${fmt(item.amount)}</div>
-                    </div>`;
-                });
-                recentIncomeEl.innerHTML = html;
-            }
-        }
-
-        // Update recent expenses
-        const recentExpensesEl = document.getElementById('recentExpenses');
-        if (recentExpensesEl) {
-            if (monthExpenses.length === 0) {
-                recentExpensesEl.innerHTML = '<div class="empty-state"><div class="empty-icon">🛍️</div><p>لا توجد مصاريف لهذا الشهر</p></div>';
-            } else {
-                let html = '';
-                monthExpenses.slice(-3).forEach(item => {
-                    html += `<div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border);">
-                        <div>
-                            <div style="font-size:0.88rem; font-weight:600;">${item.name}</div>
-                            <div style="font-size:0.75rem; color:var(--text-muted);">${item.category}</div>
-                        </div>
-                        <div style="font-weight:700; color:var(--danger); font-size:0.95rem;">-${fmt(item.amount)}</div>
-                    </div>`;
-                });
-                recentExpensesEl.innerHTML = html;
-            }
-        }
-    }
-
-    // ===== SET CURRENT MONTH =====
-    function setCurrentMonth() {
-        const month = new Date().getMonth() + 1;
-        ['dashboardMonth', 'incomeMonth', 'expenseMonth'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.value = month;
-        });
-    }
-
-    // ===== CLEAR ALL DATA =====
-    function confirmClearData() {
-        document.getElementById('clearModal').style.display = 'flex';
-        document.getElementById('sidebar').classList.remove('open');
-    }
-
-    function clearAllData() {
-        state = { income: [], expenses: [] };
-        try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
-        try { sessionStorage.removeItem(STORAGE_KEY); } catch(e) {}
-        try { deleteCookie(STORAGE_KEY); } catch(e) {}
-        document.getElementById('clearModal').style.display = 'none';
-        updateAllUI();
-        showToast('✅ تم مسح جميع البيانات بنجاح');
-    }
-
-    // ===== SAVE ON PAGE UNLOAD (extra safety) =====
-    window.addEventListener('beforeunload', function() {
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
-        try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+// ===== DATA LIMITS =====
+const MAX_INCOME = 3;
+const MAX_EXPENSES = 5;
+const UPGRADE_URL = 'https://technology7.gumroad.com/l/smart-budget';
+
+// ===== STATE =====
+let state = { income: [], expenses: [] };
+const STORAGE_KEY = 'budgetAppState_v2';
+
+// ===== SAVE & LOAD =====
+function saveState() {
+    const data = JSON.stringify(state);
+    try { localStorage.setItem(STORAGE_KEY, data); } catch(e){}
+}
+function loadState() {
+    try { const saved = localStorage.getItem(STORAGE_KEY); if(saved) state = JSON.parse(saved); } catch(e){}
+}
+loadState();
+
+// ===== NAVIGATION =====
+function showPage(pageId){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-'+pageId).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n=>{
+        if(n.getAttribute('onclick').includes(pageId)) n.classList.add('active');
     });
+}
+function showLockedPage(pageId){ document.getElementById('lockedModal').style.display='flex'; }
 
-    // ===== INIT =====
-    setCurrentMonth();
-    loadState();
+// ===== CLEAR DATA =====
+function confirmClearData(){ document.getElementById('clearModal').style.display='flex'; }
+function clearAllData(){ state = {income:[], expenses:[]}; saveState(); location.reload(); }
+function closeModal(){ document.getElementById('lockedModal').style.display='none'; }
+function closeLockedModal(e){ if(e.target.id==='lockedModal') closeModal(); }
+
+// ===== DASHBOARD UPDATE =====
+function updateDashboard(){
+    const month = parseInt(document.getElementById('dashboardMonth').value);
+    const incomes = state.income.filter(i=>i.month===month);
+    const expenses = state.expenses.filter(e=>e.month===month);
+    const totalIncome = incomes.reduce((a,b)=>a+b.amount,0);
+    const totalExpenses = expenses.reduce((a,b)=>a+b.amount,0);
+    document.getElementById('totalIncome').textContent = totalIncome + ' ر.س';
+    document.getElementById('totalExpenses').textContent = totalExpenses + ' ر.س';
+    document.getElementById('netBalance').textContent = (totalIncome-totalExpenses) + ' ر.س';
+    document.getElementById('realSalaryAmount').textContent = (totalIncome-totalExpenses) + ' ر.س';
+}
 </script>
+
 </body>
 </html>
