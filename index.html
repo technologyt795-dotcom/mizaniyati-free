@@ -838,7 +838,7 @@
             position: fixed;
             top: 16px;
             right: 16px;
-            z-index: 300;
+            z-index: 2000;
             background: var(--primary);
             color: white;
             border: none;
@@ -934,6 +934,24 @@
 @media (max-width: 700px) {
     .mobile-menu-btn {
         display: block;
+    }
+}
+        @media (max-width: 700px) {
+
+    .sidebar {
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        position: fixed;
+        right: 0;
+        z-index: 1000;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main {
+        margin-right: 0 !important;
     }
 }
     </style>
