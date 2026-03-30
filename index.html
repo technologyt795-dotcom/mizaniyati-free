@@ -919,9 +919,9 @@
 </head>
 <body>
 
-<!-- Mobile Menu Button -->
-<button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">☰</button>
-
+/* MOBILE MENU TOGGLE */
+.menu-toggle{display:none;position:fixed;top:16px;left:16px;z-index:200;background:#0f172a;color:#fff;border:none;border-radius:10px;padding:10px;font-size:20px;cursor:pointer}
+@media(max-width:700px){.menu-toggle{display:block}}
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
