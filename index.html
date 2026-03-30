@@ -978,6 +978,30 @@
         margin-right: 0 !important;
     }
 }
+
+        /* ===== FIX MOBILE SIDEBAR (SAFE OVERRIDE) ===== */
+@media (max-width: 768px) {
+
+    .sidebar {
+        transform: translateX(100%) !important;
+    }
+
+    .sidebar.open {
+        transform: translateX(0) !important;
+    }
+
+    .mobile-menu-btn {
+        display: block !important;
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        z-index: 2000;
+    }
+
+    .main {
+        margin-right: 0 !important;
+    }
+}
     </style>
 </head>
 <body>
