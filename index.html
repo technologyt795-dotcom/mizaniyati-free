@@ -38,7 +38,7 @@
         }
 
         /* ===== SIDEBAR ===== */
-     .sidebar {
+    .sidebar {
     position: fixed;
     top: 0;
     right: 0;
@@ -53,19 +53,32 @@
 
     transform: translateX(0);
     transition: transform 0.3s ease;
+    will-change: transform;
 }
 
-/* مهم جداً */
+/* MOBILE ONLY */
 @media (max-width: 700px) {
+
     .sidebar {
-        transform: translateX(100%);
+        transform: translateX(100%) !important;
     }
 
     .sidebar.open {
         transform: translateX(0) !important;
     }
-}
 
+    .main {
+        margin-right: 0 !important;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        z-index: 2000;
+    }
+}
         .sidebar-logo {
             padding: 28px 20px 20px;
             border-bottom: 1px solid rgba(255,255,255,0.12);
