@@ -915,13 +915,33 @@
             box-shadow: 0 4px 20px rgba(16,185,129,0.4);
             animation: fadeIn 0.3s;
         }
+/* MOBILE MENU TOGGLE */
+.mobile-menu-btn {
+    display: none;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 200;
+    background: #0f172a;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+@media (max-width: 700px) {
+    .mobile-menu-btn {
+        display: block;
+    }
+}
     </style>
 </head>
 <body>
 
-/* MOBILE MENU TOGGLE */
-.menu-toggle{display:none;position:fixed;top:16px;left:16px;z-index:200;background:#0f172a;color:#fff;border:none;border-radius:10px;padding:10px;font-size:20px;cursor:pointer}
-@media(max-width:700px){.menu-toggle{display:block}}
+<!-- Mobile Menu Button -->
+<button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()">☰</button>
 
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
