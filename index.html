@@ -38,7 +38,7 @@
         }
 
         /* ===== SIDEBAR ===== */
-      .sidebar {
+     .sidebar {
     position: fixed;
     top: 0;
     right: 0;
@@ -48,11 +48,22 @@
     color: white;
     display: flex;
     flex-direction: column;
-    z-index: 100;
+    z-index: 1000;
     box-shadow: -4px 0 24px rgba(108,99,255,0.15);
 
-    transform: translateX(0); /* افتراضي مفتوح في الكمبيوتر */
+    transform: translateX(0);
     transition: transform 0.3s ease;
+}
+
+/* مهم جداً */
+@media (max-width: 700px) {
+    .sidebar {
+        transform: translateX(100%);
+    }
+
+    .sidebar.open {
+        transform: translateX(0) !important;
+    }
 }
 
         .sidebar-logo {
@@ -1674,8 +1685,12 @@
         }
     }
 
-    function toggleMobileMenu() {
-    document.getElementById('sidebar').classList.toggle('open');
+   function toggleMobileMenu() {
+    const sidebar = document.getElementById('sidebar');
+
+    sidebar.classList.toggle('open');
+
+    console.log("sidebar classes:", sidebar.className);
 }
 
     // ===== MONTH NAMES =====
