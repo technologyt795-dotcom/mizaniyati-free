@@ -3,215 +3,1070 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نظام الميزانية - النسخة المجانية المحدودة</title>
+<title>مدير الميزانية الذكي - نسخة مجانية</title>
 <style>
-  /* ===========================
-     تصميم أساسي
-  =========================== */
-  body {
-    margin:0; font-family: Arial, sans-serif; background:#f5f5f5; color:#333;
-  }
-  header { background:#4CAF50; color:#fff; padding:15px; text-align:center; font-size:1.5rem; }
-  .container { display:flex; min-height:calc(100vh - 60px); }
-  .sidebar {
-    width:250px; background:#fff; border-left:1px solid #ddd; padding:15px;
-    box-sizing:border-box; flex-shrink:0;
-  }
-  .sidebar h2 { margin-top:0; font-size:1.2rem; }
-  .sidebar p { font-size:0.9rem; color:#555; }
-  .sidebar ul { list-style:none; padding:0; }
-  .sidebar ul li { padding:8px 0; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
-  .main { flex:1; padding:20px; box-sizing:border-box; }
-  button { padding:10px 15px; margin:5px 0; cursor:pointer; background:#4CAF50; color:#fff; border:none; border-radius:5px; }
-  input { padding:8px; width:100%; margin:5px 0 10px 0; box-sizing:border-box; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Cairo','Segoe UI',Tahoma,Arial,sans-serif;background:#f0f4f8;color:#1e293b;min-height:100vh;direction:rtl}
 
-  /* ===========================
-     Cards / Dashboard
-  =========================== */
-  .cards { display:flex; flex-wrap:wrap; gap:10px; }
-  .card {
-    background:#fff; padding:15px; border-radius:10px; flex:1 1 200px; box-shadow:0 2px 5px rgba(0,0,0,0.1);
-  }
-  .blurred { filter:blur(5px); color:transparent; text-shadow:0 0 5px rgba(0,0,0,0.5); pointer-events:none; }
+  /* Layout */
+  .app{display:flex;min-height:100vh}
+  .sidebar{width:260px;background:#fff;border-left:1px solid #e2e8f0;min-height:100vh;display:flex;flex-direction:column;position:fixed;right:0;top:0;bottom:0;z-index:100;overflow-y:auto;transition:transform .3s}
+  .main-content{flex:1;margin-right:260px;min-height:100vh;padding-bottom:80px}
+  .page{display:none;padding:24px 32px;max-width:960px}
+  .page.active{display:block}
 
-  /* ===========================
-     Modal
-  =========================== */
-  .modal {
-    display:none; position:fixed; top:0; left:0; width:100%; height:100%;
-    background:rgba(0,0,0,0.5); justify-content:center; align-items:center;
-  }
-  .modal-content {
-    background:#fff; padding:20px; border-radius:10px; max-width:400px; width:90%; text-align:center;
-  }
+  /* Sidebar */
+  .sidebar-header{padding:20px 16px;border-bottom:1px solid #f1f5f9}
+  .sidebar-logo{display:flex;align-items:center;gap:10px}
+  .logo-icon{width:42px;height:42px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 12px rgba(59,130,246,.3)}
+  .logo-title{font-weight:800;color:#1e293b;font-size:14px;line-height:1.2}
+  .logo-badge{font-size:11px;color:#f97316;font-weight:700;margin-top:2px}
+  .upgrade-hint{margin-top:10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:8px 10px;font-size:11px;color:#ea580c;text-align:center;font-weight:600}
+  .nav{padding:12px 8px;flex:1}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;cursor:pointer;transition:all .2s;color:#64748b;font-size:13px;font-weight:600;width:100%;border:none;background:none;text-align:right;font-family:inherit}
+  .nav-item:hover{background:#f8fafc;color:#1e293b}
+  .nav-item.active{background:#eff6ff;color:#2563eb;font-weight:700}
+  .nav-item .nav-icon{font-size:18px;min-width:22px}
+  .nav-item .nav-label{flex:1}
+  .nav-item .lock-icon{font-size:12px;color:#94a3b8}
+  .sidebar-upgrade{padding:16px}
+  .upgrade-card{background:linear-gradient(135deg,#1d4ed8,#1e40af);border-radius:16px;padding:16px;color:#fff}
+  .upgrade-card-title{font-weight:800;font-size:14px;text-align:center;margin-bottom:4px}
+  .upgrade-card-sub{font-size:11px;color:#bfdbfe;text-align:center;margin-bottom:12px}
+  .upgrade-features{list-style:none;font-size:11px;color:#dbeafe;margin-bottom:14px}
+  .upgrade-features li{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+  .btn-upgrade-full{display:block;background:#fff;color:#1d4ed8;font-weight:800;font-size:12px;padding:10px 14px;border-radius:10px;text-align:center;text-decoration:none;transition:all .2s}
+  .btn-upgrade-full:hover{background:#eff6ff;box-shadow:0 4px 12px rgba(0,0,0,.1)}
 
-  /* ===========================
-     Sticky Upgrade Bar
-  =========================== */
-  .upgrade-bar {
-    position:fixed; bottom:0; left:0; width:100%; background:#ff9800; color:#fff;
-    display:flex; justify-content:space-between; align-items:center; padding:10px 20px; box-sizing:border-box;
-    z-index:1000;
-  }
-  .upgrade-bar button { background:#fff; color:#ff9800; }
+  /* Mobile Header */
+  .mobile-header{display:none;background:#fff;border-bottom:1px solid #e2e8f0;padding:12px 16px;position:sticky;top:0;z-index:200;align-items:center;justify-content:space-between}
+  .hamburger{background:none;border:none;cursor:pointer;padding:6px;border-radius:8px}
+  .hamburger svg{width:22px;height:22px;color:#475569}
+  .mobile-logo{display:flex;align-items:center;gap:8px}
+  .mobile-logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+  .mobile-logo-title{font-weight:800;font-size:13px;color:#1e293b}
+  .btn-upgrade-mobile{background:linear-gradient(90deg,#f97316,#ef4444);color:#fff;font-size:11px;font-weight:800;padding:6px 14px;border-radius:20px;text-decoration:none;white-space:nowrap}
 
-  /* ===========================
-     Media Queries للجوال
-  =========================== */
-  @media screen and (max-width:768px){
-    .container { flex-direction:column; }
-    .sidebar { width:100%; order:2; border-left:none; border-top:1px solid #ddd; }
-    .main { order:1; padding:10px; }
-    button { width:100%; font-size:1rem; }
-    .cards { flex-direction:column; }
+  /* Mobile Overlay */
+  .mobile-overlay{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.5)}
+  .mobile-overlay.open{display:flex}
+  .mobile-menu{background:#fff;width:280px;height:100%;margin-right:auto;display:flex;flex-direction:column;overflow-y:auto;box-shadow:4px 0 20px rgba(0,0,0,.2)}
+  .mobile-menu-header{padding:16px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between}
+  .close-menu{background:none;border:none;cursor:pointer;padding:6px;border-radius:8px;font-size:18px;color:#94a3b8}
+
+  /* Cards */
+  .card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid #f1f5f9}
+  .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px}
+  .stat-card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.06);border:1px solid #f1f5f9}
+  .stat-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:12px}
+  .stat-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px}
+  .stat-label{font-size:12px;color:#94a3b8;margin-bottom:4px}
+  .stat-value{font-size:22px;font-weight:900}
+  .stat-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+
+  /* Real Salary Shock */
+  .salary-shock{border-radius:20px;padding:24px;margin-bottom:20px;text-align:center;border:2px solid}
+  .salary-shock.positive{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-color:#86efac}
+  .salary-shock.negative{background:linear-gradient(135deg,#fff5f5,#fee2e2);border-color:#fca5a5}
+  .shock-emoji{font-size:40px;margin-bottom:8px}
+  .shock-title{font-size:22px;font-weight:900;color:#1e293b;margin-bottom:8px}
+  .shock-amount{font-size:44px;font-weight:900;margin-bottom:8px}
+  .shock-amount.positive{color:#16a34a}
+  .shock-amount.negative{color:#dc2626}
+  .shock-msg{color:#64748b;font-size:14px;margin-bottom:16px}
+  .blurred-analysis{position:relative;border-radius:14px;overflow:hidden;margin-top:8px}
+  .blur-content{background:#fff;padding:16px;border-radius:14px;filter:blur(4px);user-select:none;pointer-events:none}
+  .blur-content p{font-weight:700;color:#374151;font-size:13px;margin-bottom:10px}
+  .blur-content ul{list-style:none;font-size:13px;color:#6b7280}
+  .blur-content ul li{padding:4px 0;display:flex;gap:8px}
+  .blur-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.7);backdrop-filter:blur(2px)}
+  .blur-overlay-icon{font-size:28px;margin-bottom:8px}
+  .blur-overlay-title{font-weight:800;color:#1e293b;font-size:14px;margin-bottom:4px}
+  .blur-overlay-text{color:#64748b;font-size:12px;margin-bottom:12px}
+  .btn-show-full{background:linear-gradient(90deg,#2563eb,#1d4ed8);color:#fff;border:none;padding:8px 20px;border-radius:20px;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-block}
+  .btn-show-full:hover{box-shadow:0 4px 12px rgba(37,99,235,.4)}
+
+  /* Forms */
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .form-group{display:flex;flex-direction:column;gap:6px}
+  .form-group label{font-size:12px;font-weight:700;color:#374151}
+  .form-group input,.form-group select{border:1px solid #e2e8f0;border-radius:12px;padding:10px 14px;font-size:13px;background:#f8fafc;color:#1e293b;font-family:inherit;outline:none;transition:all .2s;width:100%}
+  .form-group input:focus,.form-group select:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.1);background:#fff}
+  .form-group input.error,.form-group select.error{border-color:#ef4444}
+  .error-text{font-size:11px;color:#ef4444;margin-top:2px}
+  .btn-submit{width:100%;border:none;padding:12px;border-radius:14px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s;margin-top:4px}
+  .btn-submit:hover{box-shadow:0 4px 14px rgba(0,0,0,.15)}
+  .btn-submit:disabled{opacity:.5;cursor:not-allowed}
+  .btn-green{background:linear-gradient(90deg,#22c55e,#16a34a);color:#fff}
+  .btn-red{background:linear-gradient(90deg,#ef4444,#dc2626);color:#fff}
+
+  /* Tables */
+  .table-container{background:#fff;border-radius:20px;overflow:hidden;border:1px solid #f1f5f9;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-top:16px}
+  .table-header{padding:14px 20px;border-bottom:1px solid #f8fafc;display:flex;align-items:center;justify-content:space-between}
+  .table-header h3{font-weight:800;color:#1e293b;font-size:14px}
+  .table-total{font-weight:800;font-size:14px}
+  .entry-row{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #f8fafc;transition:background .2s}
+  .entry-row:last-child{border-bottom:none}
+  .entry-row:hover{background:#f8fafc}
+  .entry-info{display:flex;align-items:center;gap:12px}
+  .entry-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px}
+  .entry-name{font-size:13px;font-weight:700;color:#1e293b}
+  .entry-meta{font-size:11px;color:#94a3b8;margin-top:2px}
+  .entry-amount{font-weight:900;font-size:14px}
+  .btn-delete{background:none;border:none;cursor:pointer;color:#fca5a5;padding:4px;border-radius:6px;transition:color .2s;font-size:16px}
+  .btn-delete:hover{color:#ef4444}
+  .entry-actions{display:flex;align-items:center;gap:8px}
+
+  /* Quick Actions */
+  .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+  .quick-btn{background:#fff;border:2px solid;border-radius:20px;padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s;font-family:inherit;width:100%}
+  .quick-btn.green{border-color:#bbf7d0}
+  .quick-btn.green:hover{background:#f0fdf4;border-color:#4ade80}
+  .quick-btn.red{border-color:#fecaca}
+  .quick-btn.red:hover{background:#fff5f5;border-color:#f87171}
+  .quick-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px}
+  .quick-title{font-size:13px;font-weight:700;color:#1e293b;text-align:right}
+  .quick-sub{font-size:11px;color:#94a3b8;margin-top:2px;text-align:right}
+
+  /* Upgrade Banner */
+  .upgrade-banner{background:linear-gradient(135deg,#1d4ed8,#1e40af);border-radius:20px;padding:20px;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:16px}
+  .upgrade-banner-text p:first-child{font-weight:800;font-size:15px}
+  .upgrade-banner-text p:last-child{font-size:12px;color:#bfdbfe;margin-top:4px}
+  .btn-upgrade-banner{background:#fff;color:#1d4ed8;font-weight:800;font-size:13px;padding:10px 18px;border-radius:12px;text-decoration:none;white-space:nowrap;transition:all .2s}
+  .btn-upgrade-banner:hover{background:#eff6ff;box-shadow:0 4px 12px rgba(0,0,0,.1)}
+
+  /* Limit Warning */
+  .limit-warning{background:#fff7ed;border:2px solid #fed7aa;border-radius:16px;padding:16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start}
+  .limit-warning-icon{font-size:24px;min-width:24px}
+  .limit-warning-title{font-weight:800;color:#c2410c;font-size:13px}
+  .limit-warning-text{color:#ea580c;font-size:12px;margin-top:4px}
+  .btn-upgrade-small{display:inline-block;margin-top:8px;background:#f97316;color:#fff;font-size:11px;font-weight:800;padding:5px 14px;border-radius:20px;text-decoration:none;transition:background .2s}
+  .btn-upgrade-small:hover{background:#ea580c}
+
+  /* Success Message */
+  .success-msg{background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:13px;color:#15803d;font-weight:600;margin-bottom:14px;display:none}
+  .success-msg.show{display:flex}
+
+  /* Page Headers */
+  .page-header{margin-bottom:24px}
+  .page-header h1{font-size:28px;font-weight:900;color:#1e293b}
+  .page-header p{color:#94a3b8;font-size:13px;margin-top:4px}
+
+  /* Budget limits */
+  .limit-row{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid #f8fafc}
+  .limit-row:last-child{border-bottom:none}
+  .limit-name{font-size:13px;font-weight:700;color:#1e293b;display:flex;align-items:center;gap:8px}
+  .limit-amount{font-weight:800;font-size:14px;color:#374151;display:flex;align-items:center;gap:6px}
+  .lock-sm{font-size:11px;color:#cbd5e1}
+
+  /* Progress bar */
+  .progress-bar{height:6px;background:#f1f5f9;border-radius:99px;overflow:hidden;margin-top:4px}
+  .progress-fill{height:100%;border-radius:99px;transition:width .4s}
+  .progress-fill.blue{background:linear-gradient(90deg,#60a5fa,#3b82f6)}
+  .progress-fill.orange{background:linear-gradient(90deg,#fb923c,#f97316)}
+  .progress-fill.red{background:linear-gradient(90deg,#f87171,#ef4444)}
+
+  /* Locked Page */
+  .locked-page-content{text-align:center;padding:60px 20px}
+  .locked-page-icon{font-size:64px;margin-bottom:16px}
+  .locked-page-title{font-size:22px;font-weight:800;color:#1e293b;margin-bottom:8px}
+  .locked-page-text{color:#94a3b8;font-size:14px;margin-bottom:24px}
+
+  /* Charts Fake Preview */
+  .charts-preview{filter:blur(6px);pointer-events:none;user-select:none;margin-bottom:16px}
+  .fake-chart{background:#fff;border-radius:16px;padding:20px;border:1px solid #f1f5f9}
+  .fake-bars{display:flex;align-items:flex-end;gap:10px;height:120px;padding-bottom:8px}
+  .fake-bar{flex:1;border-radius:6px 6px 0 0}
+  .fake-bar-1{height:90%;background:linear-gradient(180deg,#3b82f6,#2563eb)}
+  .fake-bar-2{height:60%;background:linear-gradient(180deg,#f97316,#ea580c)}
+  .fake-bar-3{height:75%;background:linear-gradient(180deg,#22c55e,#16a34a)}
+  .fake-bar-4{height:45%;background:linear-gradient(180deg,#8b5cf6,#7c3aed)}
+  .fake-bar-5{height:80%;background:linear-gradient(180deg,#ec4899,#db2777)}
+  .fake-pie{width:120px;height:120px;border-radius:50%;background:conic-gradient(#3b82f6 0% 30%,#f97316 30% 55%,#22c55e 55% 75%,#8b5cf6 75% 90%,#ec4899 90% 100%);margin:0 auto}
+
+  /* Diagnosis Fake */
+  .fake-diagnosis{background:#fff;border-radius:16px;padding:20px;border:1px solid #f1f5f9}
+  .fake-diag-item{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid #f8fafc}
+  .fake-diag-item:last-child{border-bottom:none}
+  .fake-diag-icon{width:32px;height:32px;border-radius:8px;background:#f1f5f9}
+  .fake-diag-bar{height:8px;background:#f1f5f9;border-radius:99px;flex:1}
+
+  /* Modal */
+  .modal-overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.6);align-items:center;justify-content:center;padding:16px}
+  .modal-overlay.open{display:flex}
+  .modal{background:#fff;border-radius:24px;width:100%;max-width:420px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+  .modal-head{background:linear-gradient(135deg,#1d4ed8,#1e40af);padding:24px;text-align:center;color:#fff}
+  .modal-icon{font-size:40px;margin-bottom:8px}
+  .modal-title{font-size:20px;font-weight:900;margin-bottom:4px}
+  .modal-subtitle{color:#bfdbfe;font-size:13px}
+  .modal-body{padding:20px}
+  .modal-features{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+  .modal-feature{background:#eff6ff;border-radius:12px;padding:10px;display:flex;align-items:center;gap:8px;font-size:12px;color:#1e293b;font-weight:700}
+  .modal-feature-icon{font-size:16px}
+  .btn-modal-upgrade{display:block;width:100%;background:linear-gradient(90deg,#1d4ed8,#2563eb);color:#fff;font-weight:900;font-size:14px;padding:14px;border-radius:14px;text-align:center;text-decoration:none;transition:all .2s;margin-bottom:8px}
+  .btn-modal-upgrade:hover{box-shadow:0 6px 18px rgba(29,78,216,.4)}
+  .btn-modal-close{display:block;width:100%;background:none;border:none;color:#94a3b8;font-size:13px;padding:6px;cursor:pointer;font-family:inherit}
+  .btn-modal-close:hover{color:#64748b}
+
+  /* Sticky Bar */
+  .sticky-bar{position:fixed;bottom:0;left:0;right:0;z-index:400;background:linear-gradient(90deg,#1e40af,#2563eb,#1d4ed8);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 -4px 20px rgba(29,78,216,.3)}
+  .sticky-bar-left{display:flex;align-items:center;gap:10px}
+  .sticky-bar-icon{font-size:20px;animation:pulse 2s infinite}
+  .sticky-bar-title{font-weight:800;font-size:14px}
+  .sticky-bar-sub{font-size:11px;color:#bfdbfe}
+  .btn-sticky-upgrade{background:#fff;color:#1d4ed8;font-weight:900;font-size:12px;padding:8px 18px;border-radius:10px;text-decoration:none;white-space:nowrap;transition:all .2s}
+  .btn-sticky-upgrade:hover{background:#eff6ff}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+
+  /* Notification toast */
+  .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:600;background:#1e293b;color:#fff;padding:12px 20px;border-radius:14px;font-size:13px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.2);display:none;align-items:center;gap:8px;min-width:260px;justify-content:center}
+  .toast.show{display:flex}
+  .toast.success{background:linear-gradient(90deg,#22c55e,#16a34a)}
+  .toast.error{background:linear-gradient(90deg,#ef4444,#dc2626)}
+
+  /* Recent transactions */
+  .recent-section{margin-bottom:20px}
+  .recent-title{font-size:13px;font-weight:800;color:#1e293b;margin-bottom:12px}
+
+  /* Mobile Responsive */
+  @media(max-width:768px){
+    .sidebar{transform:translateX(100%);position:fixed}
+    .sidebar.mobile-open{transform:translateX(0)}
+    .main-content{margin-right:0}
+    .mobile-header{display:flex}
+    .page{padding:16px}
+    .stats-grid{grid-template-columns:1fr}
+    .form-grid{grid-template-columns:1fr}
+    .quick-grid{grid-template-columns:1fr}
+    .upgrade-banner{flex-direction:column;text-align:center}
+    .shock-amount{font-size:32px}
+    .shock-title{font-size:18px}
+    .modal-features{grid-template-columns:1fr}
+    .sticky-bar-sub{display:none}
+    .page-header h1{font-size:22px}
+  }
+  @media(max-width:480px){
+    .stats-grid{grid-template-columns:1fr}
+    .stat-card{padding:14px}
+    .stat-value{font-size:18px}
   }
 </style>
 </head>
 <body>
 
-<header>نظام الميزانية - النسخة المجانية محدودة</header>
-
-<div class="container">
-  <aside class="sidebar">
-    <h2>القائمة</h2>
-    <p>نسخة مجانية محدودة</p>
-    <p>قم بالترقية للحصول على جميع الميزات</p>
-    <ul>
-      <li onclick="showDashboard()">🏠 لوحة التحكم</li>
-      <li onclick="showCharts()">📈 الرسوم البيانية 🔒</li>
-      <li onclick="showDiagnosis()">🩺 التشخيص 🔒</li>
-      <li onclick="showSavings()">🎯 أهداف الادخار 🔒</li>
-    </ul>
-    <button onclick="upgrade()">ترقية الآن</button>
-  </aside>
-
-  <main class="main">
-    <div id="dashboard">
-      <h2>لوحة التحكم</h2>
-
-      <div>
-        <h3>إضافة دخل</h3>
-        <input type="number" id="income-input" placeholder="المبلغ">
-        <button onclick="addIncome()">أضف الدخل</button>
-      </div>
-
-      <div>
-        <h3>إضافة مصروف</h3>
-        <input type="number" id="expense-input" placeholder="المبلغ">
-        <button onclick="addExpense()">أضف المصروف</button>
-      </div>
-
-      <div class="cards">
-        <div class="card">
-          <h4>إجمالي الدخل:</h4>
-          <p id="total-income">0</p>
-        </div>
-        <div class="card">
-          <h4>إجمالي المصاريف:</h4>
-          <p id="total-expense">0</p>
-        </div>
-        <div class="card">
-          <h4>راتبك الحقيقي 😳</h4>
-          <p id="balance">0</p>
-        </div>
-        <div class="card blurred">
-          <h4>تحليل أعمق 🔒</h4>
-          <p>تحليل أعمق + توصيات ذكية متاحة في النسخة الكاملة</p>
-          <button onclick="upgrade()">عرض التحليل الكامل</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="charts" style="display:none;">
-      <h2>الرسوم البيانية 🔒</h2>
-      <div class="blurred" style="height:200px; background:#ccc; border-radius:10px;"></div>
-      <button onclick="upgrade()">فتح النسخة الكاملة</button>
-    </div>
-
-    <div id="diagnosis" style="display:none;">
-      <h2>التشخيص 🔒</h2>
-      <p class="blurred">نصوص التشخيص متاحة فقط في النسخة الكاملة</p>
-      <button onclick="upgrade()">فتح النسخة الكاملة</button>
-    </div>
-
-    <div id="savings" style="display:none;">
-      <h2>أهداف الادخار 🔒</h2>
-      <p class="blurred">متاحة فقط في النسخة الكاملة</p>
-      <button onclick="upgrade()">فتح النسخة الكاملة</button>
-    </div>
-  </main>
+<!-- Mobile Header -->
+<div class="mobile-header" id="mobileHeader">
+  <button class="hamburger" onclick="toggleMobileMenu()" aria-label="القائمة">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+  <div class="mobile-logo">
+    <div class="mobile-logo-icon">💰</div>
+    <span class="mobile-logo-title">مدير الميزانية الذكي</span>
+  </div>
+  <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-upgrade-mobile">ترقية</a>
 </div>
 
-<!-- Modal -->
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <h3>ميزة متقدمة 🔒</h3>
-    <p>هذه الميزة متوفرة فقط في النسخة الكاملة</p>
-    <button onclick="upgrade()">افتح النسخة الكاملة</button>
+<!-- Mobile Menu Overlay -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="closeMobileMenu()">
+  <div class="mobile-menu" onclick="event.stopPropagation()">
+    <div class="mobile-menu-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon">💰</div>
+        <div>
+          <div class="logo-title">مدير الميزانية</div>
+          <div class="logo-badge">نسخة مجانية محدودة</div>
+        </div>
+      </div>
+      <button class="close-menu" onclick="closeMobileMenu()">✕</button>
+    </div>
+    <div class="nav" id="mobileNav"></div>
+    <div style="padding:12px 16px;border-top:1px solid #f1f5f9">
+      <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-upgrade-full" style="background:linear-gradient(90deg,#1d4ed8,#2563eb);color:#fff">🚀 فتح النسخة الكاملة</a>
+    </div>
   </div>
 </div>
 
-<!-- Sticky Upgrade Bar -->
-<div class="upgrade-bar">
-  <span>🚀 افتح جميع الميزات الآن</span>
-  <button onclick="upgrade()">ترقية</button>
+<!-- App Container -->
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="logo-icon">💰</div>
+        <div>
+          <div class="logo-title">مدير الميزانية الذكي</div>
+          <div class="logo-badge">نسخة مجانية محدودة</div>
+        </div>
+      </div>
+      <div class="upgrade-hint">قم بالترقية للحصول على جميع الميزات</div>
+    </div>
+    <nav class="nav" id="desktopNav"></nav>
+    <div class="sidebar-upgrade">
+      <div class="upgrade-card">
+        <div style="text-align:center;font-size:28px;margin-bottom:4px">🚀</div>
+        <div class="upgrade-card-title">النسخة الكاملة</div>
+        <div class="upgrade-card-sub">ميزات غير محدودة</div>
+        <ul class="upgrade-features">
+          <li>✅ <span>دخل ومصاريف غير محدودة</span></li>
+          <li>✅ <span>رسوم بيانية متقدمة</span></li>
+          <li>✅ <span>تشخيص مالي ذكي</span></li>
+          <li>✅ <span>أهداف الادخار</span></li>
+          <li>✅ <span>تقارير PDF وExcel</span></li>
+        </ul>
+        <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-upgrade-full">احصل على الميزات الكاملة →</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Dashboard Page -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <h1>لوحة التحكم</h1>
+        <p>نظرة عامة على وضعك المالي</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon" style="background:#dcfce7">💵</div>
+            <span class="stat-badge" style="background:#dcfce7;color:#16a34a" id="incomeBadge">0/3</span>
+          </div>
+          <div class="stat-label">إجمالي الدخل</div>
+          <div class="stat-value" style="color:#16a34a" id="totalIncomeDisplay">0 ر.س</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon" style="background:#fee2e2">💸</div>
+            <span class="stat-badge" style="background:#fee2e2;color:#dc2626" id="expenseBadge">0/5</span>
+          </div>
+          <div class="stat-label">إجمالي المصاريف</div>
+          <div class="stat-value" style="color:#dc2626" id="totalExpensesDisplay">0 ر.س</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-icon" style="background:#dbeafe">📊</div>
+          </div>
+          <div class="stat-label">نسبة الادخار</div>
+          <div class="stat-value" style="color:#2563eb" id="savingsRateDisplay">0%</div>
+        </div>
+      </div>
+
+      <!-- Real Salary Shock -->
+      <div class="salary-shock positive" id="salaryShock">
+        <div class="shock-emoji" id="shockEmoji">💚</div>
+        <div class="shock-title">راتبك الحقيقي</div>
+        <div class="shock-amount positive" id="balanceDisplay">0 ر.س</div>
+        <div class="shock-msg">😳 هذا هو المبلغ الحقيقي الذي يبقى لك بعد المصاريف</div>
+
+        <!-- Blurred Analysis -->
+        <div class="blurred-analysis">
+          <div class="blur-content">
+            <p>📊 التحليل المتقدم لإنفاقك:</p>
+            <ul>
+              <li>• نسبة الإنفاق على الطعام أعلى بـ 23% من المعدل الطبيعي</li>
+              <li>• يمكنك توفير 450 ر.س شهرياً بتحسين عادات الإنفاق</li>
+              <li>• أكبر تسريب مالي: مصاريف الترفيه والمطاعم</li>
+              <li>• توصية: خصص 20% من دخلك للادخار الإلزامي</li>
+            </ul>
+          </div>
+          <div class="blur-overlay">
+            <div class="blur-overlay-icon">🔒</div>
+            <div class="blur-overlay-title">تحليل أعمق + توصيات ذكية</div>
+            <div class="blur-overlay-text">متاحة في النسخة الكاملة</div>
+            <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-show-full">عرض التحليل الكامل</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-grid">
+        <button class="quick-btn green" onclick="navigate('income')">
+          <div class="quick-icon" style="background:#dcfce7">➕</div>
+          <div>
+            <div class="quick-title">إضافة دخل</div>
+            <div class="quick-sub" id="quickIncomeSub">0/3 مدخلات</div>
+          </div>
+        </button>
+        <button class="quick-btn red" onclick="navigate('expenses')">
+          <div class="quick-icon" style="background:#fee2e2">➕</div>
+          <div>
+            <div class="quick-title">إضافة مصروف</div>
+            <div class="quick-sub" id="quickExpenseSub">0/5 مدخلات</div>
+          </div>
+        </button>
+      </div>
+
+      <!-- Recent Transactions -->
+      <div id="recentSection" style="display:none">
+        <div class="table-container">
+          <div class="table-header">
+            <h3>آخر المعاملات</h3>
+          </div>
+          <div id="recentList"></div>
+        </div>
+      </div>
+
+      <!-- CTA Banner -->
+      <div class="upgrade-banner">
+        <div class="upgrade-banner-text">
+          <p>🚀 افتح إمكانياتك الكاملة</p>
+          <p>تقارير مفصلة • تشخيص ذكي • أهداف ادخار • لا حدود</p>
+        </div>
+        <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-upgrade-banner">ترقية الآن →</a>
+      </div>
+    </div>
+
+    <!-- Income Page -->
+    <div class="page" id="page-income">
+      <div class="page-header">
+        <h1>إدارة الدخل</h1>
+        <p id="incomeSubtitle">0 من 3 مدخلات مجانية</p>
+      </div>
+
+      <div id="incomeLimitWarning" class="limit-warning" style="display:none">
+        <div class="limit-warning-icon">🔒</div>
+        <div>
+          <div class="limit-warning-title">وصلت للحد المجاني</div>
+          <div class="limit-warning-text">قم بالترقية لفتح عدد غير محدود</div>
+          <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-upgrade-small">ترقية الآن →</a>
+        </div>
+      </div>
+
+      <div id="incomeSuccessMsg" class="success-msg">✅ تم إضافة الدخل بنجاح!</div>
+
+      <div class="card" id="incomeFormCard">
+        <h3 style="font-size:13px;font-weight:800;color:#1e293b;margin-bottom:16px">إضافة مصدر دخل جديد</h3>
+        <form id="incomeForm" onsubmit="submitIncome(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>مصدر الدخل *</label>
+              <select id="incomeSource">
+                <option value="">اختر المصدر</option>
+                <option>راتب أساسي</option>
+                <option>عمل حر</option>
+                <option>استثمارات</option>
+                <option>إيجار</option>
+                <option>مكافآت</option>
+                <option>أخرى</option>
+              </select>
+              <span class="error-text" id="err-incomeSource"></span>
+            </div>
+            <div class="form-group">
+              <label>المبلغ (ر.س) *</label>
+              <input type="number" id="incomeAmount" placeholder="0" min="0">
+              <span class="error-text" id="err-incomeAmount"></span>
+            </div>
+            <div class="form-group">
+              <label>التاريخ *</label>
+              <input type="date" id="incomeDate">
+              <span class="error-text" id="err-incomeDate"></span>
+            </div>
+            <div class="form-group">
+              <label>ملاحظات (اختياري)</label>
+              <input type="text" id="incomeNotes" placeholder="أي ملاحظات إضافية">
+            </div>
+          </div>
+          <button type="submit" class="btn-submit btn-green" id="incomeSubmitBtn">➕ إضافة دخل</button>
+        </form>
+      </div>
+
+      <div id="incomeList"></div>
+
+      <div class="upgrade-banner" style="margin-top:16px">
+        <div class="upgrade-banner-text">
+          <p>💡 النسخة الكاملة: دخل غير محدود</p>
+          <p>تتبع جميع مصادر دخلك بدون حدود</p>
+        </div>
+        <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-upgrade-banner">احصل على الميزات الكاملة</a>
+      </div>
+    </div>
+
+    <!-- Expenses Page -->
+    <div class="page" id="page-expenses">
+      <div class="page-header">
+        <h1>إدارة المصاريف</h1>
+        <p id="expenseSubtitle">0 من 5 مدخلات مجانية</p>
+      </div>
+
+      <div id="expenseLimitWarning" class="limit-warning" style="display:none">
+        <div class="limit-warning-icon">🔒</div>
+        <div>
+          <div class="limit-warning-title">وصلت للحد المجاني</div>
+          <div class="limit-warning-text">قم بالترقية لفتح عدد غير محدود</div>
+          <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-upgrade-small">ترقية الآن →</a>
+        </div>
+      </div>
+
+      <div id="expenseSuccessMsg" class="success-msg">✅ تم إضافة المصروف بنجاح!</div>
+
+      <div class="card" id="expenseFormCard">
+        <h3 style="font-size:13px;font-weight:800;color:#1e293b;margin-bottom:16px">إضافة مصروف جديد</h3>
+        <form id="expenseForm" onsubmit="submitExpense(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>التصنيف *</label>
+              <select id="expenseCategory">
+                <option value="">اختر التصنيف</option>
+                <option>طعام وشراب</option>
+                <option>مواصلات</option>
+                <option>ترفيه</option>
+                <option>ملابس</option>
+                <option>صحة</option>
+                <option>تعليم</option>
+                <option>فواتير</option>
+                <option>أخرى</option>
+              </select>
+              <span class="error-text" id="err-expenseCategory"></span>
+            </div>
+            <div class="form-group">
+              <label>وصف المصروف *</label>
+              <input type="text" id="expenseDesc" placeholder="مثال: فاتورة الكهرباء">
+              <span class="error-text" id="err-expenseDesc"></span>
+            </div>
+            <div class="form-group">
+              <label>المبلغ (ر.س) *</label>
+              <input type="number" id="expenseAmount" placeholder="0" min="0">
+              <span class="error-text" id="err-expenseAmount"></span>
+            </div>
+            <div class="form-group">
+              <label>التاريخ *</label>
+              <input type="date" id="expenseDate">
+              <span class="error-text" id="err-expenseDate"></span>
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:8px">
+            <label>ملاحظات (اختياري)</label>
+            <input type="text" id="expenseNotes" placeholder="أي ملاحظات إضافية">
+          </div>
+          <button type="submit" class="btn-submit btn-red" id="expenseSubmitBtn" style="margin-top:14px">➕ إضافة مصروف</button>
+        </form>
+      </div>
+
+      <!-- Category Summary -->
+      <div id="categorySection" style="display:none">
+        <div class="table-container" style="margin-top:16px">
+          <div class="table-header"><h3>ملخص حسب التصنيف</h3></div>
+          <div id="categoryList" style="padding:16px 20px"></div>
+        </div>
+      </div>
+
+      <div id="expenseList"></div>
+
+      <div class="upgrade-banner" style="margin-top:16px">
+        <div class="upgrade-banner-text">
+          <p>💡 النسخة الكاملة: مصاريف غير محدودة</p>
+          <p>تتبع جميع مصاريفك بلا قيود</p>
+        </div>
+        <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-upgrade-banner">احصل على الميزات الكاملة</a>
+      </div>
+    </div>
+
+    <!-- Charts Page (Locked) -->
+    <div class="page" id="page-charts">
+      <div class="page-header">
+        <h1>📈 الرسوم البيانية</h1>
+        <p>تصور بياني لبياناتك المالية</p>
+      </div>
+
+      <!-- Blurred fake charts -->
+      <div class="charts-preview">
+        <div class="fake-chart">
+          <div style="font-weight:800;font-size:13px;color:#374151;margin-bottom:16px">مخطط المصاريف الشهرية</div>
+          <div class="fake-bars">
+            <div class="fake-bar fake-bar-1"></div>
+            <div class="fake-bar fake-bar-2"></div>
+            <div class="fake-bar fake-bar-3"></div>
+            <div class="fake-bar fake-bar-4"></div>
+            <div class="fake-bar fake-bar-5"></div>
+            <div class="fake-bar" style="height:65%;background:linear-gradient(180deg,#fbbf24,#d97706)"></div>
+          </div>
+        </div>
+      </div>
+      <div class="charts-preview" style="margin-top:16px">
+        <div class="fake-chart" style="display:flex;align-items:center;gap:24px">
+          <div class="fake-pie"></div>
+          <div style="flex:1">
+            <div style="font-weight:800;font-size:13px;color:#374151;margin-bottom:12px">توزيع المصاريف</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:center;gap:8px"><div style="width:12px;height:12px;border-radius:50%;background:#3b82f6"></div><span style="font-size:12px;color:#6b7280">طعام وشراب - 30%</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><div style="width:12px;height:12px;border-radius:50%;background:#f97316"></div><span style="font-size:12px;color:#6b7280">مواصلات - 25%</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><div style="width:12px;height:12px;border-radius:50%;background:#22c55e"></div><span style="font-size:12px;color:#6b7280">ترفيه - 20%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="locked-page-content">
+        <div class="locked-page-icon">📈🔒</div>
+        <div class="locked-page-title">ميزة متقدمة</div>
+        <div class="locked-page-text">هذه الميزة متوفرة فقط في النسخة الكاملة<br>احصل على رسوم بيانية تفاعلية متقدمة ومفصلة</div>
+        <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-show-full" style="font-size:14px;padding:12px 28px">افتح النسخة الكاملة 🚀</a>
+      </div>
+    </div>
+
+    <!-- Diagnosis Page (Locked) -->
+    <div class="page" id="page-diagnosis">
+      <div class="page-header">
+        <h1>🩺 التشخيص المالي</h1>
+        <p>تحليل ذكي لعادات إنفاقك</p>
+      </div>
+
+      <!-- Blurred fake diagnosis -->
+      <div class="charts-preview">
+        <div class="fake-diagnosis">
+          <div style="font-weight:800;font-size:13px;color:#374151;margin-bottom:14px">نتائج التشخيص المالي</div>
+          <div class="fake-diag-item"><div class="fake-diag-icon"></div><div class="fake-diag-bar"></div><div style="width:40px;height:12px;background:#f1f5f9;border-radius:4px"></div></div>
+          <div class="fake-diag-item"><div class="fake-diag-icon"></div><div class="fake-diag-bar"></div><div style="width:40px;height:12px;background:#f1f5f9;border-radius:4px"></div></div>
+          <div class="fake-diag-item"><div class="fake-diag-icon"></div><div class="fake-diag-bar"></div><div style="width:40px;height:12px;background:#f1f5f9;border-radius:4px"></div></div>
+          <div class="fake-diag-item"><div class="fake-diag-icon"></div><div class="fake-diag-bar"></div><div style="width:40px;height:12px;background:#f1f5f9;border-radius:4px"></div></div>
+        </div>
+      </div>
+
+      <div class="locked-page-content">
+        <div class="locked-page-icon">🩺🔒</div>
+        <div class="locked-page-title">ميزة متقدمة</div>
+        <div class="locked-page-text">هذه الميزة متوفرة فقط في النسخة الكاملة<br>احصل على تشخيص مالي ذكي وتوصيات مخصصة</div>
+        <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-show-full" style="font-size:14px;padding:12px 28px">افتح النسخة الكاملة 🚀</a>
+      </div>
+    </div>
+
+    <!-- Goals Page (Locked) -->
+    <div class="page" id="page-goals">
+      <div class="page-header">
+        <h1>🎯 أهداف الادخار</h1>
+        <p>حدد أهدافك وتتبع تقدمك</p>
+      </div>
+
+      <!-- Blurred fake goals -->
+      <div class="charts-preview">
+        <div class="fake-chart">
+          <div style="font-weight:800;font-size:13px;color:#374151;margin-bottom:14px">أهدافي الادخارية</div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><div style="width:100px;height:12px;background:#f1f5f9;border-radius:4px"></div><div style="width:60px;height:12px;background:#f1f5f9;border-radius:4px"></div></div><div style="height:10px;background:#f1f5f9;border-radius:99px"><div style="height:100%;width:65%;background:linear-gradient(90deg,#3b82f6,#2563eb);border-radius:99px"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><div style="width:80px;height:12px;background:#f1f5f9;border-radius:4px"></div><div style="width:60px;height:12px;background:#f1f5f9;border-radius:4px"></div></div><div style="height:10px;background:#f1f5f9;border-radius:99px"><div style="height:100%;width:40%;background:linear-gradient(90deg,#22c55e,#16a34a);border-radius:99px"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><div style="width:110px;height:12px;background:#f1f5f9;border-radius:4px"></div><div style="width:60px;height:12px;background:#f1f5f9;border-radius:4px"></div></div><div style="height:10px;background:#f1f5f9;border-radius:99px"><div style="height:100%;width:80%;background:linear-gradient(90deg,#f97316,#ea580c);border-radius:99px"></div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="locked-page-content">
+        <div class="locked-page-icon">🎯🔒</div>
+        <div class="locked-page-title">ميزة متقدمة</div>
+        <div class="locked-page-text">هذه الميزة متوفرة فقط في النسخة الكاملة<br>ضع أهدافاً ادخارية وتتبع تقدمك بشكل مرئي</div>
+        <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-show-full" style="font-size:14px;padding:12px 28px">افتح النسخة الكاملة 🚀</a>
+      </div>
+    </div>
+
+    <!-- Budget Limits Page (View Only) -->
+    <div class="page" id="page-limits">
+      <div class="page-header">
+        <h1>📋 حدود الميزانية</h1>
+        <p>عرض الحدود المحددة لكل فئة</p>
+      </div>
+
+      <div class="limit-warning">
+        <div class="limit-warning-icon">🔒</div>
+        <div>
+          <div class="limit-warning-title">العرض فقط — تعديل الحدود في النسخة الكاملة</div>
+          <div class="limit-warning-text">يمكنك مشاهدة الحدود المحددة، لكن تعديلها يتطلب الترقية</div>
+          <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-upgrade-small">فتح النسخة الكاملة</a>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <div class="table-header"><h3>حدود الإنفاق الشهري</h3></div>
+        <div id="limitsList"></div>
+      </div>
+
+      <div class="upgrade-banner" style="margin-top:16px">
+        <div class="upgrade-banner-text">
+          <p>✏️ عدّل حدودك كما تريد</p>
+          <p>خصص ميزانيتك بحرية كاملة في النسخة الكاملة</p>
+        </div>
+        <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-upgrade-banner">ترقية الآن →</a>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Upgrade Modal -->
+<div class="modal-overlay" id="upgradeModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-icon">🔒</div>
+      <div class="modal-title">ميزة متقدمة</div>
+      <div class="modal-subtitle">هذه الميزة متوفرة فقط في النسخة الكاملة</div>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:13px;font-weight:700;color:#374151;margin-bottom:12px">ما ستحصل عليه في النسخة الكاملة:</div>
+      <div class="modal-features">
+        <div class="modal-feature"><span class="modal-feature-icon">📈</span>رسوم بيانية متقدمة</div>
+        <div class="modal-feature"><span class="modal-feature-icon">🩺</span>تشخيص مالي ذكي</div>
+        <div class="modal-feature"><span class="modal-feature-icon">🎯</span>أهداف الادخار</div>
+        <div class="modal-feature"><span class="modal-feature-icon">✏️</span>تعديل الحدود</div>
+        <div class="modal-feature"><span class="modal-feature-icon">💵</span>دخل غير محدود</div>
+        <div class="modal-feature"><span class="modal-feature-icon">📤</span>تصدير PDF</div>
+        <div class="modal-feature"><span class="modal-feature-icon">🔔</span>تنبيهات ذكية</div>
+        <div class="modal-feature"><span class="modal-feature-icon">📅</span>تقارير مفصلة</div>
+      </div>
+      <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-modal-upgrade">🚀 افتح النسخة الكاملة الآن</a>
+      <button class="btn-modal-close" onclick="closeModal()">الاستمرار في النسخة المجانية</button>
+    </div>
+  </div>
+</div>
+
+<!-- Limit Reached Modal -->
+<div class="modal-overlay" id="limitModal">
+  <div class="modal">
+    <div class="modal-head" style="background:linear-gradient(135deg,#f97316,#ea580c)">
+      <div class="modal-icon">🔒</div>
+      <div class="modal-title">وصلت للحد المجاني</div>
+      <div class="modal-subtitle" id="limitModalText">قم بالترقية لفتح عدد غير محدود</div>
+    </div>
+    <div class="modal-body">
+      <p style="text-align:center;color:#64748b;font-size:13px;margin-bottom:16px">النسخة المجانية تسمح بـ 3 مدخلات دخل و5 مصاريف فقط</p>
+      <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-modal-upgrade">فتح النسخة الكاملة</a>
+      <button class="btn-modal-close" onclick="closeLimitModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Sticky Bar -->
+<div class="sticky-bar">
+  <div class="sticky-bar-left">
+    <span class="sticky-bar-icon">🚀</span>
+    <div>
+      <div class="sticky-bar-title">افتح جميع الميزات الآن</div>
+      <div class="sticky-bar-sub">رسوم بيانية • تشخيص ذكي • لا حدود</div>
+    </div>
+  </div>
+  <a href="https://technology7.gumroad.com/l/smart-budget" target="_blank" class="btn-sticky-upgrade">ترقية الآن ←</a>
 </div>
 
 <script>
-let totalIncome = 0;
-let totalExpense = 0;
-let incomeCount = 0;
-let expenseCount = 0;
+// ─── Data ───────────────────────────────────────────────────────────────────
+const MAX_INCOME = 3;
+const MAX_EXPENSES = 5;
+const LOCKED_PAGES = ['charts','diagnosis','goals'];
+const UPGRADE_URL = 'https://technology7.gumroad.com/l/smart-budget';
 
-function addIncome(){
-  const val = Number(document.getElementById('income-input').value);
-  if(!val) return;
-  if(incomeCount >=3){ alert("وصلت للحد المجاني — قم بالترقية لفتح عدد غير محدود"); return; }
-  totalIncome += val;
-  incomeCount++;
-  document.getElementById('total-income').innerText = totalIncome;
-  calculateBalance();
+const DEFAULT_LIMITS = [
+  {category:'طعام وشراب',limit:500},
+  {category:'مواصلات',limit:300},
+  {category:'ترفيه',limit:200},
+  {category:'ملابس',limit:150},
+  {category:'صحة',limit:200},
+  {category:'تعليم',limit:100},
+  {category:'فواتير',limit:400},
+  {category:'أخرى',limit:250},
+];
+
+function load(key, def){try{return JSON.parse(localStorage.getItem(key))||def}catch{return def}}
+function save(key,val){localStorage.setItem(key,JSON.stringify(val))}
+
+let incomeEntries = load('budget_income',[]);
+let expenseEntries = load('budget_expenses',[]);
+let budgetLimits = load('budget_limits', DEFAULT_LIMITS);
+
+// ─── Navigation ─────────────────────────────────────────────────────────────
+const navItems = [
+  {page:'dashboard',icon:'🏠',label:'لوحة التحكم',locked:false},
+  {page:'income',icon:'💵',label:'الدخل',locked:false},
+  {page:'expenses',icon:'💸',label:'المصاريف',locked:false},
+  {page:'charts',icon:'📈',label:'الرسوم البيانية',locked:true},
+  {page:'diagnosis',icon:'🩺',label:'التشخيص المالي',locked:true},
+  {page:'goals',icon:'🎯',label:'أهداف الادخار',locked:true},
+  {page:'limits',icon:'📋',label:'حدود الميزانية',locked:false},
+];
+
+let currentPage = 'dashboard';
+
+function buildNav(containerId){
+  const el = document.getElementById(containerId);
+  el.innerHTML = navItems.map(item=>`
+    <button class="nav-item ${item.page===currentPage?'active':''}" onclick="navigate('${item.page}')" id="nav-${containerId}-${item.page}">
+      <span class="nav-icon">${item.icon}</span>
+      <span class="nav-label">${item.label}</span>
+      ${item.locked?'<span class="lock-icon">🔒</span>':''}
+    </button>
+  `).join('');
 }
 
-function addExpense(){
-  const val = Number(document.getElementById('expense-input').value);
-  if(!val) return;
-  if(expenseCount >=5){ alert("وصلت للحد المجاني — قم بالترقية لفتح عدد غير محدود"); return; }
-  totalExpense += val;
-  expenseCount++;
-  document.getElementById('total-expense').innerText = totalExpense;
-  calculateBalance();
+function navigate(page){
+  if(LOCKED_PAGES.includes(page)){openModal();return;}
+  currentPage=page;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  buildNav('desktopNav');
+  buildNav('mobileNav');
+  closeMobileMenu();
+  renderAll();
 }
 
-function calculateBalance(){
-  document.getElementById('balance').innerText = totalIncome - totalExpense;
+// ─── Mobile Menu ─────────────────────────────────────────────────────────────
+function toggleMobileMenu(){document.getElementById('mobileOverlay').classList.add('open');buildNav('mobileNav')}
+function closeMobileMenu(){document.getElementById('mobileOverlay').classList.remove('open')}
+
+// ─── Modals ──────────────────────────────────────────────────────────────────
+function openModal(){document.getElementById('upgradeModal').classList.add('open')}
+function closeModal(){document.getElementById('upgradeModal').classList.remove('open')}
+function openLimitModal(text){
+  document.getElementById('limitModalText').textContent = text||'قم بالترقية لفتح عدد غير محدود';
+  document.getElementById('limitModal').classList.add('open');
+}
+function closeLimitModal(){document.getElementById('limitModal').classList.remove('open')}
+document.getElementById('upgradeModal').addEventListener('click',function(e){if(e.target===this)closeModal()});
+document.getElementById('limitModal').addEventListener('click',function(e){if(e.target===this)closeLimitModal()});
+
+// ─── Toast ───────────────────────────────────────────────────────────────────
+function showToast(msg,type='success'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast show '+(type==='success'?'success':'error');
+  setTimeout(()=>t.className='toast',2800);
 }
 
-function showDashboard(){
-  hideAllSections();
-  document.getElementById('dashboard').style.display = 'block';
+// ─── Formatting ──────────────────────────────────────────────────────────────
+function fmt(n){return n.toLocaleString('ar-SA',{minimumFractionDigits:0,maximumFractionDigits:0})+' ر.س'}
+
+// ─── Dashboard Render ────────────────────────────────────────────────────────
+function renderDashboard(){
+  const totalIncome = incomeEntries.reduce((s,e)=>s+e.amount,0);
+  const totalExpenses = expenseEntries.reduce((s,e)=>s+e.amount,0);
+  const balance = totalIncome - totalExpenses;
+  const rate = totalIncome>0 ? Math.round(balance/totalIncome*100) : 0;
+
+  document.getElementById('totalIncomeDisplay').textContent = fmt(totalIncome);
+  document.getElementById('totalExpensesDisplay').textContent = fmt(totalExpenses);
+  document.getElementById('savingsRateDisplay').textContent = rate+'%';
+  document.getElementById('incomeBadge').textContent = incomeEntries.length+'/'+MAX_INCOME;
+  document.getElementById('expenseBadge').textContent = expenseEntries.length+'/'+MAX_EXPENSES;
+  document.getElementById('quickIncomeSub').textContent = incomeEntries.length+'/'+MAX_INCOME+' مدخلات';
+  document.getElementById('quickExpenseSub').textContent = expenseEntries.length+'/'+MAX_EXPENSES+' مدخلات';
+
+  const shock = document.getElementById('salaryShock');
+  const shockAmt = document.getElementById('balanceDisplay');
+  const shockEmoji = document.getElementById('shockEmoji');
+  const isPos = balance >= 0;
+  shock.className = 'salary-shock '+(isPos?'positive':'negative');
+  shockAmt.className = 'shock-amount '+(isPos?'positive':'negative');
+  shockAmt.textContent = fmt(Math.abs(balance));
+  shockEmoji.textContent = isPos?'💚':'😳';
+
+  // Recent
+  const all = [
+    ...incomeEntries.map(e=>({...e,type:'income'})),
+    ...expenseEntries.map(e=>({...e,type:'expense'}))
+  ].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,6);
+
+  const recentSection = document.getElementById('recentSection');
+  const recentList = document.getElementById('recentList');
+  if(all.length===0){recentSection.style.display='none';return;}
+  recentSection.style.display='block';
+  recentList.innerHTML = all.map(e=>`
+    <div class="entry-row">
+      <div class="entry-info">
+        <div class="entry-icon" style="background:${e.type==='income'?'#dcfce7':'#fee2e2'}">${e.type==='income'?'💵':'💸'}</div>
+        <div>
+          <div class="entry-name">${e.type==='income'?e.source:e.description}</div>
+          <div class="entry-meta">${e.date}</div>
+        </div>
+      </div>
+      <div class="entry-amount" style="color:${e.type==='income'?'#16a34a':'#dc2626'}">${e.type==='income'?'+':'-'}${fmt(e.amount)}</div>
+    </div>
+  `).join('');
 }
 
-function showCharts(){ document.getElementById('modal').style.display='flex'; }
-function showDiagnosis(){ document.getElementById('modal').style.display='flex'; }
-function showSavings(){ document.getElementById('modal').style.display='flex'; }
+// ─── Income Render ───────────────────────────────────────────────────────────
+function renderIncome(){
+  const total = incomeEntries.reduce((s,e)=>s+e.amount,0);
+  document.getElementById('incomeSubtitle').textContent = incomeEntries.length+' من '+MAX_INCOME+' مدخلات مجانية';
+  const atLimit = incomeEntries.length >= MAX_INCOME;
+  document.getElementById('incomeLimitWarning').style.display = atLimit?'flex':'none';
+  document.getElementById('incomeFormCard').style.opacity = atLimit?'0.6':'1';
+  document.getElementById('incomeFormCard').style.pointerEvents = atLimit?'none':'auto';
+  document.getElementById('incomeSubmitBtn').textContent = atLimit?'🔒 الحد المجاني ممتلئ':'➕ إضافة دخل';
 
-function hideAllSections(){
-  document.getElementById('dashboard').style.display='none';
-  document.getElementById('charts').style.display='none';
-  document.getElementById('diagnosis').style.display='none';
-  document.getElementById('savings').style.display='none';
+  const list = document.getElementById('incomeList');
+  if(incomeEntries.length===0){list.innerHTML='';return;}
+  list.innerHTML = `
+    <div class="table-container" style="margin-top:16px">
+      <div class="table-header">
+        <h3>مصادر الدخل المضافة</h3>
+        <span class="table-total" style="color:#16a34a">${fmt(total)}</span>
+      </div>
+      ${incomeEntries.map(e=>`
+        <div class="entry-row">
+          <div class="entry-info">
+            <div class="entry-icon" style="background:#dcfce7">💵</div>
+            <div>
+              <div class="entry-name">${e.source}</div>
+              <div class="entry-meta">${e.date}${e.notes?' • '+e.notes:''}</div>
+            </div>
+          </div>
+          <div class="entry-actions">
+            <span class="entry-amount" style="color:#16a34a">${fmt(e.amount)}</span>
+            <button class="btn-delete" onclick="removeIncome('${e.id}')" title="حذف">🗑</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>`;
 }
 
-function upgrade(){
-  window.open('https://technology7.gumroad.com/l/smart-budget','_blank');
+// ─── Expense Render ───────────────────────────────────────────────────────────
+function renderExpenses(){
+  const total = expenseEntries.reduce((s,e)=>s+e.amount,0);
+  document.getElementById('expenseSubtitle').textContent = expenseEntries.length+' من '+MAX_EXPENSES+' مدخلات مجانية';
+  const atLimit = expenseEntries.length >= MAX_EXPENSES;
+  document.getElementById('expenseLimitWarning').style.display = atLimit?'flex':'none';
+  document.getElementById('expenseFormCard').style.opacity = atLimit?'0.6':'1';
+  document.getElementById('expenseFormCard').style.pointerEvents = atLimit?'none':'auto';
+  document.getElementById('expenseSubmitBtn').textContent = atLimit?'🔒 الحد المجاني ممتلئ':'➕ إضافة مصروف';
+
+  // Category summary
+  const byCategory = {};
+  expenseEntries.forEach(e=>{byCategory[e.category]=(byCategory[e.category]||0)+e.amount});
+  const catSection = document.getElementById('categorySection');
+  const catList = document.getElementById('categoryList');
+  if(Object.keys(byCategory).length>0){
+    catSection.style.display='block';
+    catList.innerHTML = Object.entries(byCategory).map(([cat,amt])=>{
+      const lim = (budgetLimits.find(l=>l.category===cat)||{limit:0}).limit;
+      const pct = lim>0?Math.min(100,amt/lim*100):0;
+      const isOver = lim>0&&amt>lim;
+      const fillClass = isOver?'red':pct>80?'orange':'blue';
+      return `<div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+          <span style="font-size:13px;font-weight:700;color:#374151">${cat}</span>
+          <span style="font-size:13px;font-weight:800;color:${isOver?'#dc2626':'#374151'}">${fmt(amt)}${lim>0?' / '+fmt(lim):''}</span>
+        </div>
+        ${lim>0?`<div class="progress-bar"><div class="progress-fill ${fillClass}" style="width:${pct}%"></div></div>`:''}
+      </div>`;
+    }).join('');
+  } else catSection.style.display='none';
+
+  // List
+  const list = document.getElementById('expenseList');
+  if(expenseEntries.length===0){list.innerHTML='';return;}
+  list.innerHTML = `
+    <div class="table-container" style="margin-top:16px">
+      <div class="table-header">
+        <h3>المصاريف المضافة</h3>
+        <span class="table-total" style="color:#dc2626">${fmt(total)}</span>
+      </div>
+      ${expenseEntries.map(e=>`
+        <div class="entry-row">
+          <div class="entry-info">
+            <div class="entry-icon" style="background:#fee2e2">💸</div>
+            <div>
+              <div class="entry-name">${e.description}</div>
+              <div class="entry-meta">${e.category} • ${e.date}</div>
+            </div>
+          </div>
+          <div class="entry-actions">
+            <span class="entry-amount" style="color:#dc2626">${fmt(e.amount)}</span>
+            <button class="btn-delete" onclick="removeExpense('${e.id}')" title="حذف">🗑</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>`;
 }
 
-// Close modal on click outside content
-document.getElementById('modal').addEventListener('click', function(e){
-  if(e.target === this) this.style.display='none';
-});
+// ─── Budget Limits Render ────────────────────────────────────────────────────
+function renderLimits(){
+  document.getElementById('limitsList').innerHTML = budgetLimits.map(l=>`
+    <div class="limit-row">
+      <div class="limit-name">📋 ${l.category}</div>
+      <div class="limit-amount">${fmt(l.limit)} <span class="lock-sm">🔒</span></div>
+    </div>
+  `).join('');
+}
+
+// ─── Add Income ───────────────────────────────────────────────────────────────
+function submitIncome(e){
+  e.preventDefault();
+  if(incomeEntries.length>=MAX_INCOME){openLimitModal('وصلت للحد المجاني — قم بالترقية لفتح عدد غير محدود');return;}
+  const src = document.getElementById('incomeSource').value.trim();
+  const amt = parseFloat(document.getElementById('incomeAmount').value);
+  const dt = document.getElementById('incomeDate').value;
+  const notes = document.getElementById('incomeNotes').value.trim();
+  let valid=true;
+  document.getElementById('err-incomeSource').textContent='';
+  document.getElementById('err-incomeAmount').textContent='';
+  document.getElementById('err-incomeDate').textContent='';
+  if(!src){document.getElementById('err-incomeSource').textContent='الرجاء اختيار مصدر الدخل';document.getElementById('incomeSource').classList.add('error');valid=false}else document.getElementById('incomeSource').classList.remove('error');
+  if(!amt||amt<=0){document.getElementById('err-incomeAmount').textContent='الرجاء إدخال مبلغ صحيح';document.getElementById('incomeAmount').classList.add('error');valid=false}else document.getElementById('incomeAmount').classList.remove('error');
+  if(!dt){document.getElementById('err-incomeDate').textContent='الرجاء اختيار التاريخ';document.getElementById('incomeDate').classList.add('error');valid=false}else document.getElementById('incomeDate').classList.remove('error');
+  if(!valid)return;
+  incomeEntries.push({id:Date.now().toString(),source:src,amount:amt,date:dt,notes});
+  save('budget_income',incomeEntries);
+  document.getElementById('incomeForm').reset();
+  document.getElementById('incomeDate').value=new Date().toISOString().split('T')[0];
+  showToast('✅ تم إضافة الدخل بنجاح!');
+  renderAll();
+}
+
+// ─── Add Expense ──────────────────────────────────────────────────────────────
+function submitExpense(e){
+  e.preventDefault();
+  if(expenseEntries.length>=MAX_EXPENSES){openLimitModal('وصلت للحد المجاني — قم بالترقية لفتح عدد غير محدود');return;}
+  const cat=document.getElementById('expenseCategory').value.trim();
+  const desc=document.getElementById('expenseDesc').value.trim();
+  const amt=parseFloat(document.getElementById('expenseAmount').value);
+  const dt=document.getElementById('expenseDate').value;
+  const notes=document.getElementById('expenseNotes').value.trim();
+  let valid=true;
+  ['expenseCategory','expenseDesc','expenseAmount','expenseDate'].forEach(id=>{
+    document.getElementById('err-'+id).textContent='';
+    document.getElementById(id).classList.remove('error');
+  });
+  if(!cat){document.getElementById('err-expenseCategory').textContent='الرجاء اختيار التصنيف';document.getElementById('expenseCategory').classList.add('error');valid=false}
+  if(!desc){document.getElementById('err-expenseDesc').textContent='الرجاء إدخال وصف المصروف';document.getElementById('expenseDesc').classList.add('error');valid=false}
+  if(!amt||amt<=0){document.getElementById('err-expenseAmount').textContent='الرجاء إدخال مبلغ صحيح';document.getElementById('expenseAmount').classList.add('error');valid=false}
+  if(!dt){document.getElementById('err-expenseDate').textContent='الرجاء اختيار التاريخ';document.getElementById('expenseDate').classList.add('error');valid=false}
+  if(!valid)return;
+  expenseEntries.push({id:Date.now().toString(),category:cat,description:desc,amount:amt,date:dt,notes});
+  save('budget_expenses',expenseEntries);
+  document.getElementById('expenseForm').reset();
+  document.getElementById('expenseDate').value=new Date().toISOString().split('T')[0];
+  showToast('✅ تم إضافة المصروف بنجاح!');
+  renderAll();
+}
+
+// ─── Remove ───────────────────────────────────────────────────────────────────
+function removeIncome(id){
+  incomeEntries=incomeEntries.filter(e=>e.id!==id);
+  save('budget_income',incomeEntries);
+  renderAll();
+}
+function removeExpense(id){
+  expenseEntries=expenseEntries.filter(e=>e.id!==id);
+  save('budget_expenses',expenseEntries);
+  renderAll();
+}
+
+// ─── Render All ───────────────────────────────────────────────────────────────
+function renderAll(){
+  renderDashboard();
+  renderIncome();
+  renderExpenses();
+  renderLimits();
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+document.getElementById('incomeDate').value = new Date().toISOString().split('T')[0];
+document.getElementById('expenseDate').value = new Date().toISOString().split('T')[0];
+buildNav('desktopNav');
+buildNav('mobileNav');
+renderAll();
 </script>
-
 </body>
 </html>
